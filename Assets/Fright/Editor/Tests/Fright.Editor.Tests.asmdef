@@ -1,0 +1,14 @@
+{
+    "name": "Fright.Editor.Tests",
+    "references": [
+        "Fright.Editor.Templates"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}

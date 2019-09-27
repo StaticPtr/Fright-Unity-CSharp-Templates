@@ -1,0 +1,5 @@
+private void TestFunction()
+{
+	int x = 5;
+	int y = 6;
+}
