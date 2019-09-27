@@ -14,11 +14,15 @@ namespace Fright.Editor.Templates
 			{"class", typeof(XmlClass)},
 		};
 
+		public System.Version version;
 		public List<XmlBase> children = new List<XmlBase>();
 
 		public override void ConstructFromXml(XmlNode node, XmlDocument document)
 		{
 			base.ConstructFromXml(node, document);
+
+			//One offs
+			version = new System.Version(node.GetAttribute("version", "1.0"));
 
 			//Children
 			foreach(XmlNode child in node.ChildNodes)
