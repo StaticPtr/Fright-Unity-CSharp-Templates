@@ -2,6 +2,7 @@
 using UnityEngine.TestTools;
 using NUnit.Framework;
 using System.Text;
+using System.Xml;
 using System.Collections;
 using Fright.Editor.Templates;
 
@@ -12,37 +13,32 @@ namespace Fright.Editor.Tests
 		[Test]
 		public void ToCSharp_VoidVoid()
 		{
-			XmlFunction function = new XmlFunction("TestFunction");
-
-			string generatedCode = SerializeToCode(function);
-			string expectedCode = GetExpectedResult("VoidVoid");
-			Assert.AreEqual(expectedCode, generatedCode);
+			RunXmlToCodeTest("VoidVoid");
 		}
 
 		[Test]
 		public void ToCSharp_VoidVoidWithBody()
 		{
-			XmlFunction function = new XmlFunction("TestFunction");
-			function.body = "int x = 5;\nint y = 6;";
-
-			string generatedCode = SerializeToCode(function);
-			string expectedCode = GetExpectedResult("VoidVoidWithBody");
-			Assert.AreEqual(expectedCode, generatedCode);
+			RunXmlToCodeTest("VoidVoidWithBody");
 		}
 
 		[Test]
 		public void ToCSharp_Complex()
 		{
-			XmlFunction function = new XmlFunction("Add", "public");
-			function.comment = "Adds two numbers together";
-			function.body = "return lhs + rhs;";
-			function.virtuality = XmlFunction.Virtuality.@override;
-			function.returnType = "int";
-			function.arguments.Add(new XmlArgument("lhs", "int"));
-			function.arguments.Add(new XmlArgument("rhs", "int"));
+			RunXmlToCodeTest("Complex");
+		}
+
+		private void RunXmlToCodeTest(string id)
+		{
+			string xml = GetXml(id);
+			XmlDocument document = new XmlDocument();
+			document.LoadXml(xml);
+
+			XmlFunction function = new XmlFunction();
+			function.ConstructFromXml(document.GetFirstChild("function"), document);
 
 			string generatedCode = SerializeToCode(function);
-			string expectedCode = GetExpectedResult("Complex");
+			string expectedCode = GetExpectedResult(id);
 			Assert.AreEqual(expectedCode, generatedCode);
 		}
 
@@ -57,6 +53,11 @@ namespace Fright.Editor.Tests
 		private string GetExpectedResult(string id)
 		{
 			return System.IO.File.ReadAllText("Assets/Fright/Editor/Tests/Test Expectations/" + id);
+		}
+
+		private string GetXml(string id)
+		{
+			return System.IO.File.ReadAllText("Assets/Fright/Editor/Tests/Test XML/" + id + ".xml");
 		}
 	}
 }

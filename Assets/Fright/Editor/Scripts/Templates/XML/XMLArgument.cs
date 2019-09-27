@@ -15,5 +15,11 @@ namespace Fright.Editor.Templates
 			this.id = id;
 			this.type = type;
 		}
+
+		public XmlArgument(XmlNode node, XmlDocument document)
+		{
+			this.id = node.GetAttribute("id");
+			this.type = node.GetAttribute("type");
+		}
 	}
 }

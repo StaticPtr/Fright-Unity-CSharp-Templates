@@ -16,10 +16,29 @@ namespace Fright.Editor.Templates
 		public string body;
 		public string comment;
 
-		/// Constructs a new XMLFunction
-		public XmlFunction(string id, string accessibility = null) : base(id, accessibility)
+		public override void ConstructFromXml(XmlNode node, XmlDocument document)
 		{
-			//...
+			base.ConstructFromXml(node, document);
+
+			//One offs
+			isSealed = node.GetAttribute("sealed", "false").Equals("true", System.StringComparison.InvariantCultureIgnoreCase);
+			isStatic = node.GetAttribute("static", "false").Equals("true", System.StringComparison.InvariantCultureIgnoreCase);
+			virtuality = node.GetEnumAttribute<Virtuality>("virtuality", Virtuality.none);
+			returnType = node.GetAttribute("returnType", "void");
+			comment = node.GetAttribute("comment");
+
+			//Children
+			foreach(XmlNode child in node.ChildNodes)
+			{
+				if (child is XmlText)
+				{
+					body = child.InnerText.Trim();
+				}
+				else if (child.LocalName.Equals("argument", System.StringComparison.InvariantCultureIgnoreCase))
+				{
+					arguments.Add(new XmlArgument(child, document));
+				}
+			}
 		}
 
 		/// Converts the XML object into C# and adds it to the string builder

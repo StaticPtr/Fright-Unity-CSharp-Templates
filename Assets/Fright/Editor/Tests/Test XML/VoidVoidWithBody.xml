@@ -1,0 +1,4 @@
+<function id="TestFunction">
+int x = 5;
+int y = 6;
+</function>

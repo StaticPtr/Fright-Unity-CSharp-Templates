@@ -11,19 +11,13 @@ namespace Fright.Editor.Templates
 		/// The identifier for the XML object
 		public string id;
 
-		/// Constructs a new XMLBase
-		public XmlBase(string id)
-		{
-			this.id = id;
-		}
-
-		/// Constructs a new XMLBase from an XmlNode and XmlDocument
-		public XmlBase(XmlNode xmlNode, XmlDocument xmlDocument)
-		{
-
-		}
-
 		/// Converts the XML object into C# and adds it to the string builder
 		public abstract void ToCSharp(StringBuilder stringBuilder, ref int indentationLevel);
+
+		/// Constructs the object from an Xml node and document
+		public virtual void ConstructFromXml(XmlNode node, XmlDocument document)
+		{
+			id = node.GetAttribute("id");
+		}
 	}
 }

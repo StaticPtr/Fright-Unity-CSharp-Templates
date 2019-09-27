@@ -8,9 +8,10 @@ namespace Fright.Editor.Templates
 	{
 		public string accessibility;
 
-		public XmlCSharpBase(string id, string accessibility = null) : base(id)
+		public override void ConstructFromXml(XmlNode node, XmlDocument document)
 		{
-			this.accessibility = accessibility ?? "private";
+			base.ConstructFromXml(node, document);
+			accessibility = node.GetAttribute("access", "private");
 		}
 	}
 }
