@@ -1,0 +1,4 @@
+public class Test : Interface1, Interface2, Interface3
+{
+
+}

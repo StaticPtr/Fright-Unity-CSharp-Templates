@@ -8,10 +8,12 @@ using Fright.Editor.Templates;
 
 namespace Fright.Editor.Tests
 {
-	public class Functions
+	public class Classes
 	{
-		[TestCase("VoidVoid")]
-		[TestCase("VoidVoidWithBody")]
+		[TestCase("Empty")]
+		[TestCase("Base")]
+		[TestCase("OnlyInterfaces")]
+		[TestCase("BaseAndInterfaces")]
 		[TestCase("Complex")]
 		public void RunXmlToCodeTest(string id)
 		{
@@ -19,10 +21,10 @@ namespace Fright.Editor.Tests
 			XmlDocument document = new XmlDocument();
 			document.LoadXml(xml);
 
-			XmlFunction function = new XmlFunction();
-			function.ConstructFromXml(document.GetFirstChild("function"), document);
+			XmlClass @class = new XmlClass();
+			@class.ConstructFromXml(document.GetFirstChild("class"), document);
 
-			string generatedCode = SerializeToCode(function);
+			string generatedCode = SerializeToCode(@class);
 			string expectedCode = GetExpectedResult(id);
 			Assert.AreEqual(expectedCode, generatedCode);
 		}
@@ -36,12 +38,12 @@ namespace Fright.Editor.Tests
 
 		private string GetExpectedResult(string id)
 		{
-			return System.IO.File.ReadAllText("Assets/Fright/Editor/Tests/Test Expectations/Function_" + id);
+			return System.IO.File.ReadAllText("Assets/Fright/Editor/Tests/Test Expectations/Class_" + id);
 		}
 
 		private string GetXml(string id)
 		{
-			return System.IO.File.ReadAllText("Assets/Fright/Editor/Tests/Test XML/Function_" + id + ".xml");
+			return System.IO.File.ReadAllText("Assets/Fright/Editor/Tests/Test XML/Class_" + id + ".xml");
 		}
 	}
 }

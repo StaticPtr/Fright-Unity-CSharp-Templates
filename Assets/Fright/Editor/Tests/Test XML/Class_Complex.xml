@@ -1,0 +1,19 @@
+<class id="Test" base="Object" access="public">
+	<interface id="Interface1" />
+	<interface id="Interface2" />
+	<interface id="Interface3" />
+	
+	<!-- Add(float, float) : float -->
+	<function id="Add" access="public" returnType="float">
+		<argument id="lhs" type="float" />
+		<argument id="rhs" type="float" />
+int result = lhs + rhs;
+Debug.Log(result);
+return result;
+	</function>
+
+	<!-- DoSomething() : void -->
+	<function id="DoSomething" access="public" static="true" returnType="string">
+return "Test";
+	</function>
+</class>

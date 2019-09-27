@@ -12,7 +12,7 @@ namespace Fright.Editor.Templates
 		public string id;
 
 		/// Converts the XML object into C# and adds it to the string builder
-		public abstract void ToCSharp(StringBuilder stringBuilder, ref int indentationLevel);
+		public abstract void ToCSharp(StringBuilder stringBuilder, int indentationLevel);
 
 		/// Constructs the object from an Xml node and document
 		public virtual void ConstructFromXml(XmlNode node, XmlDocument document)
