@@ -6,9 +6,9 @@ using System.Collections.Generic;
 namespace Fright.Editor.Templates
 {
 	/// Describes a function that can be used in an XML Template
-	public class XMLFunction : XMLCSharpBase
+	public class XmlFunction : XmlCSharpBase
 	{
-		public List<XMLArgument> arguments = new List<XMLArgument>();
+		public List<XmlArgument> arguments = new List<XmlArgument>();
 		public Virtuality virtuality = Virtuality.none;
 		public bool isStatic;
 		public bool isSealed;
@@ -17,7 +17,7 @@ namespace Fright.Editor.Templates
 		public string comment;
 
 		/// Constructs a new XMLFunction
-		public XMLFunction(string id, string accessibility = null) : base(id, accessibility)
+		public XmlFunction(string id, string accessibility = null) : base(id, accessibility)
 		{
 			//...
 		}
@@ -53,7 +53,7 @@ namespace Fright.Editor.Templates
 
 			for(int i = 0; i < arguments.Count; ++i)
 			{
-				XMLArgument argument = arguments[i];
+				XmlArgument argument = arguments[i];
 
 				stringBuilder.Append(argument.type ?? "?");
 				stringBuilder.AppendSpace();

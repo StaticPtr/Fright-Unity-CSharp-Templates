@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class XMLTemplate : MonoBehaviour {
+public class XmlTemplate : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

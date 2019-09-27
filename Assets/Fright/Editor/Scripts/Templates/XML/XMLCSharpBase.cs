@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 namespace Fright.Editor.Templates
 {
-	public abstract class XMLCSharpBase : XMLBase
+	public abstract class XmlCSharpBase : XmlBase
 	{
 		public string accessibility;
 
-		public XMLCSharpBase(string id, string accessibility = null) : base(id)
+		public XmlCSharpBase(string id, string accessibility = null) : base(id)
 		{
 			this.accessibility = accessibility ?? "private";
 		}

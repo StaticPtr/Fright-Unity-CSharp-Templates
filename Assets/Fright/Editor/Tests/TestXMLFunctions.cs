@@ -12,7 +12,7 @@ namespace Fright.Editor.Tests
 		[Test]
 		public void ToCSharp_VoidVoid()
 		{
-			XMLFunction function = new XMLFunction("TestFunction");
+			XmlFunction function = new XmlFunction("TestFunction");
 
 			string generatedCode = SerializeToCode(function);
 			string expectedCode = GetExpectedResult("VoidVoid");
@@ -22,7 +22,7 @@ namespace Fright.Editor.Tests
 		[Test]
 		public void ToCSharp_VoidVoidWithBody()
 		{
-			XMLFunction function = new XMLFunction("TestFunction");
+			XmlFunction function = new XmlFunction("TestFunction");
 			function.body = "int x = 5;\nint y = 6;";
 
 			string generatedCode = SerializeToCode(function);
@@ -33,20 +33,20 @@ namespace Fright.Editor.Tests
 		[Test]
 		public void ToCSharp_Complex()
 		{
-			XMLFunction function = new XMLFunction("Add", "public");
+			XmlFunction function = new XmlFunction("Add", "public");
 			function.comment = "Adds two numbers together";
 			function.body = "return lhs + rhs;";
-			function.virtuality = XMLFunction.Virtuality.@override;
+			function.virtuality = XmlFunction.Virtuality.@override;
 			function.returnType = "int";
-			function.arguments.Add(new XMLArgument("lhs", "int"));
-			function.arguments.Add(new XMLArgument("rhs", "int"));
+			function.arguments.Add(new XmlArgument("lhs", "int"));
+			function.arguments.Add(new XmlArgument("rhs", "int"));
 
 			string generatedCode = SerializeToCode(function);
 			string expectedCode = GetExpectedResult("Complex");
 			Assert.AreEqual(expectedCode, generatedCode);
 		}
 
-		private string SerializeToCode(XMLCSharpBase xmlCSharp)
+		private string SerializeToCode(XmlCSharpBase xmlCSharp)
 		{
 			StringBuilder generatedCode = new StringBuilder();
 			int indentation = 0;
