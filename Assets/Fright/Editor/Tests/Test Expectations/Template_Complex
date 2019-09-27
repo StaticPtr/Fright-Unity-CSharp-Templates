@@ -1,0 +1,14 @@
+public class Test : Object, Interface1, Interface2, Interface3
+{
+	public float Add(float lhs, float rhs)
+	{
+		int result = lhs + rhs;
+		Debug.Log(result);
+		return result;
+	}
+
+	public static string DoSomething()
+	{
+		return "Test";
+	}
+}
