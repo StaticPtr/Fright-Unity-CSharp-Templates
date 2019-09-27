@@ -12,6 +12,7 @@ namespace Fright.Editor.Templates
 		{
 			{"function", typeof(XmlFunction)},
 			{"class", typeof(XmlClass)},
+			{"struct", typeof(XmlStruct)},
 		};
 
 		public System.Version version;

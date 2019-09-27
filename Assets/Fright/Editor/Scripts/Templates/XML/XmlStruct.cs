@@ -5,12 +5,12 @@ using System.Collections.Generic;
 
 namespace Fright.Editor.Templates
 {
-	/// Describes a class that can be used in an XML Template
-	public class XmlClass : XmlType
+	/// Describes a structure that can be used in an XML Template
+	public class XmlStruct : XmlType
 	{
 		public override string kind
 		{
-			get	{ return "class"; }
+			get { return "struct"; }
 		}
 	}
 }
