@@ -14,6 +14,7 @@ namespace Fright.Editor.Templates
 
 		public System.Version version;
 		public List<XmlUsingNamespace> usings = new List<XmlUsingNamespace>();
+		public List<XmlBuildOption> buildOptions = new List<XmlBuildOption>();
 		public List<XmlBase> children = new List<XmlBase>();
 
 		private static Dictionary<string, System.Type> xmlBaseTypes
@@ -28,7 +29,7 @@ namespace Fright.Editor.Templates
 			}
 		}
 
-		public IEnumerable<XmlBase> allChildren
+		public IEnumerable<XmlBase> serializableChildren
 		{
 			get
 			{
@@ -63,7 +64,18 @@ namespace Fright.Editor.Templates
 
 				if (xmlBase != null)
 				{
-					children.Add(xmlBase);
+					if (xmlBase is XmlUsingNamespace)
+					{
+						usings.Add(xmlBase as XmlUsingNamespace);
+					}
+					else if(xmlBase is XmlBuildOption)
+					{
+						buildOptions.Add(xmlBase as XmlBuildOption);
+					}
+					else
+					{
+						children.Add(xmlBase);
+					}
 				}
 			}
 		}
@@ -71,7 +83,7 @@ namespace Fright.Editor.Templates
 		/// Converts the XML object into C# and adds it to the string builder
 		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel)
 		{
-			ChildrenToCSharp(stringBuilder, indentationLevel, allChildren);
+			ChildrenToCSharp(stringBuilder, indentationLevel, serializableChildren);
 		}
 
 		/// Converts multiple XmlBase objects into C#

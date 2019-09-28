@@ -1,7 +1,9 @@
 <template id="Class" version="1.0.0.0">
+	<build-option name="Name" type="string" replacement="name" />
+
 	<using id="System.Collections" optional="true" onByDefault="true" />
 	<using id="System.Collections.Generic" optional="true" onByDefault="true" />
 	<using id="UnityEngine" optional="true" onByDefault="false" />
 
-	<class id="NAME" access="public"/>
+	<class id="{name}" access="public"/>
 </template>

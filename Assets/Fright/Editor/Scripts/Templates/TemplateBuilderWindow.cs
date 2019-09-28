@@ -147,6 +147,7 @@ namespace Fright.Editor.Templates
 				}
 
 				templateSettings.lineEndings = (TemplateBuilder.LineEndings)EditorGUILayout.EnumPopup("Line Endings", templateSettings.lineEndings);
+				DrawBuildOptions();
 			}
 			EditorGUILayout.EndVertical();
 		}
@@ -170,6 +171,39 @@ namespace Fright.Editor.Templates
 				EditorGUILayout.Space();
 			}
 			EditorGUILayout.EndHorizontal();
+		}
+
+		private void DrawBuildOptions()
+		{
+			foreach(var buildOption in template.buildOptions)
+			{
+				DrawBuildOption(buildOption);
+			}
+		}
+
+		private void DrawBuildOption(XmlBuildOption buildOption)
+		{
+			switch(buildOption.type.ToLower())
+			{
+				case "string":
+				case "text":
+					EditorGUILayout.TextField(buildOption.name, "");
+					break;
+
+				case "int":
+					EditorGUILayout.IntField(buildOption.name, 0);
+					break;
+
+				case "float":
+				case "double":
+					EditorGUILayout.FloatField(buildOption.name, 0.0f);
+					break;
+
+				case "bool":
+				case "boolean":
+					EditorGUILayout.Toggle(buildOption.name, false);
+					break;
+			}
 		}
 		#endregion
 	}
