@@ -10,10 +10,11 @@ namespace Fright.Editor.Templates
 	/// An editor window for creating C# scripts from template files
 	public class TemplateBuilderWindow : EditorWindow
 	{
-		private const float MIN_WIDTH = 400.0f;
+		private const float MIN_WIDTH = 450.0f;
 		private const float MIN_HEIGHT = 400.0f;
 
-		[SerializeField] private Rect sharedWindowPosition = new Rect(Vector2.zero, new Vector2(800.0f, 600.0f));
+		[SerializeField] private string lastKnownCreationPath;
+		[SerializeField] private Rect sharedWindowPosition = new Rect(Vector2.zero, new Vector2(700.0f, 400.0f));
 		[SerializeField] private Vector2 templatePreviewScrollPos = Vector2.zero;
 		
 		private TemplateBuilderSettings templateSettings = new TemplateBuilderSettings();
@@ -78,8 +79,20 @@ namespace Fright.Editor.Templates
 
 				if (templates.Count > 0)
 				{
-					template = templates[0];
+					SelectTemplate(templates[0]);
 				}
+			}
+		}
+
+		private void SelectTemplate(XmlTemplate template)
+		{
+			this.template = template;
+			this.codePreview = null;
+			this.templateSettings.buildOptions.Clear();
+			
+			if (template != null)
+			{
+				this.templateSettings.buildOptions.AddRange(TemplateBuilder.ConstructBuildOptionsForTemplate(template));	
 			}
 		}
 
@@ -89,7 +102,15 @@ namespace Fright.Editor.Templates
 		{
 			RebuildTemplateListIfNecessary();
 			ApplyMinimumsToWindow();
+
+			EditorGUIUtility.labelWidth = 100.0f;
 			sharedWindowPosition = position;
+
+			//Update creation path
+			if (!string.IsNullOrEmpty(templateCreatePath))
+			{
+				lastKnownCreationPath = templateCreatePath;
+			}
 
 			//Update the preview
 			if (codePreview == null && template != null)
@@ -104,7 +125,7 @@ namespace Fright.Editor.Templates
 				EditorGUILayout.BeginHorizontal();
 				{
 					//Template Settings
-					EditorGUILayout.BeginVertical(GUILayout.Width(200.0f), GUILayout.ExpandHeight(true));
+					EditorGUILayout.BeginVertical(GUILayout.Width(300.0f), GUILayout.ExpandHeight(true));
 					{
 						DrawTemplateSettings();
 					}
@@ -132,7 +153,27 @@ namespace Fright.Editor.Templates
 			EditorGUILayout.Space();
 			EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 			{
+				//Template
 				EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
+				DrawTemplatePicker();
+				templateSettings.lineEndings = (TemplateBuilder.LineEndings)EditorGUILayout.EnumPopup("Line Endings", templateSettings.lineEndings);
+				EditorGUILayout.Space();
+			}
+			EditorGUILayout.EndVertical();
+
+			EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+			{
+				EditorGUILayout.LabelField("Template Values", EditorStyles.boldLabel);
+				DrawBuildOptions();
+			}
+			EditorGUILayout.EndVertical();
+		}
+
+		private void DrawTemplatePicker()
+		{
+			EditorGUILayout.BeginHorizontal();
+			{
+				EditorGUILayout.PrefixLabel("Template");
 
 				if (EditorGUILayout.DropdownButton(new GUIContent(template != null ? template.id : "<select template>"), FocusType.Keyboard))
 				{
@@ -140,16 +181,14 @@ namespace Fright.Editor.Templates
 
 					foreach(var template in templates)
 					{
-						menu.AddItem(new GUIContent(template.id), false, () => this.template = template);
+						XmlTemplate _template = template;
+						menu.AddItem(new GUIContent(template.id), false, () => SelectTemplate(_template));
 					}
 
 					menu.ShowAsContext();
 				}
-
-				templateSettings.lineEndings = (TemplateBuilder.LineEndings)EditorGUILayout.EnumPopup("Line Endings", templateSettings.lineEndings);
-				DrawBuildOptions();
 			}
-			EditorGUILayout.EndVertical();
+			EditorGUILayout.EndHorizontal();
 		}
 
 		private void DrawTemplatePreview()
@@ -167,42 +206,21 @@ namespace Fright.Editor.Templates
 		{
 			EditorGUILayout.BeginHorizontal(EditorStyles.toolbar, GUILayout.ExpandHeight(true));
 			{
-				EditorGUILayout.LabelField(templateCreatePath ?? "select a folder in the project view", EditorStyles.miniLabel);
+				EditorGUILayout.LabelField(lastKnownCreationPath ?? "select a folder in the project view", EditorStyles.miniLabel);
 				EditorGUILayout.Space();
+
+				GUI.enabled = false;
+				GUILayout.Button("Create", EditorStyles.toolbarButton, GUILayout.Width(100.0f));
+				GUI.enabled = true;
 			}
 			EditorGUILayout.EndHorizontal();
 		}
 
 		private void DrawBuildOptions()
 		{
-			foreach(var buildOption in template.buildOptions)
+			foreach(var buildOption in templateSettings.buildOptions)
 			{
-				DrawBuildOption(buildOption);
-			}
-		}
-
-		private void DrawBuildOption(XmlBuildOption buildOption)
-		{
-			switch(buildOption.type.ToLower())
-			{
-				case "string":
-				case "text":
-					EditorGUILayout.TextField(buildOption.name, "");
-					break;
-
-				case "int":
-					EditorGUILayout.IntField(buildOption.name, 0);
-					break;
-
-				case "float":
-				case "double":
-					EditorGUILayout.FloatField(buildOption.name, 0.0f);
-					break;
-
-				case "bool":
-				case "boolean":
-					EditorGUILayout.Toggle(buildOption.name, false);
-					break;
+				buildOption.DoLayout();
 			}
 		}
 		#endregion

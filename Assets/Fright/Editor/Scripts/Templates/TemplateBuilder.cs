@@ -23,6 +23,12 @@ namespace Fright.Editor.Templates
 			//Transform the code
 			string code = NormalizeLineEndings(codeBuilder.ToString(), settings.lineEndings);
 
+			foreach(var xmlBuildOption in template.buildOptions)
+			{
+				string value = settings.GetBuildOptionValue(xmlBuildOption.id) ?? xmlBuildOption.@default ?? "(null)";
+				code = code.Replace("{" + xmlBuildOption.id + "}", value);
+			}
+
 			//Return the result
 			return code;
 		}
@@ -37,6 +43,34 @@ namespace Fright.Editor.Templates
 				if (Path.GetExtension(filePath) == TEMPLATE_EXTENSION)
 				{
 					yield return XmlTemplate.FromFile(filePath);
+				}
+			}
+		}
+
+		public static IEnumerable<BuildOption> ConstructBuildOptionsForTemplate(XmlTemplate template)
+		{
+			foreach(XmlBuildOption xmlBuildOption in template.buildOptions)
+			{
+				switch(xmlBuildOption.type.ToLower())
+				{
+					case "string":
+					case "text":
+						yield return new BuildOption(xmlBuildOption);
+						break;
+
+					case "int":
+						yield return new IntBuildOption(xmlBuildOption);
+						break;
+
+					case "float":
+					case "double":
+						yield return new FloatBuildOption(xmlBuildOption);
+						break;
+
+					case "bool":
+					case "boolean":
+						yield return new BoolBuildOption(xmlBuildOption);
+						break;
 				}
 			}
 		}

@@ -1,5 +1,5 @@
 <template id="Class" version="1.0.0.0">
-	<build-option name="Name" type="string" replacement="name" />
+	<build-option name="Name" type="string" replacement="name" default="ClassName" />
 
 	<using id="System.Collections" optional="true" onByDefault="true" />
 	<using id="System.Collections.Generic" optional="true" onByDefault="true" />

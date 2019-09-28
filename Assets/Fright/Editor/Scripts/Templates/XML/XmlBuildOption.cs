@@ -11,7 +11,7 @@ namespace Fright.Editor.Templates
 	{
 		public string name;
 		public string type;
-		public string replacement;
+		public string @default;
 
 		public override string xmlType
 		{
@@ -30,7 +30,8 @@ namespace Fright.Editor.Templates
 			base.ConstructFromXml(node, document);
 			name = node.GetAttribute("name");
 			type = node.GetAttribute("type", "string");
-			replacement = node.GetAttribute("name", name.ToLower());
+			id = node.GetAttribute("replacement", name.ToLower());
+			@default = node.GetAttribute("default");
 		}
 	}
 }
