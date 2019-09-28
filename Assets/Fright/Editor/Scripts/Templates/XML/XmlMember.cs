@@ -9,6 +9,7 @@ namespace Fright.Editor.Templates
 	public class XmlMember : XmlCSharpBase
 	{
 		public string type;
+		public string defaultValue;
 		public bool isStatic;
 
 		public override string xmlType
@@ -26,6 +27,7 @@ namespace Fright.Editor.Templates
 			base.ConstructFromXml(node, document);
 			type = node.GetAttribute("type");
 			isStatic = node.GetAttribute<bool>("static");
+			defaultValue = node.GetAttribute("default");
 		}
 
 		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel)
@@ -37,6 +39,13 @@ namespace Fright.Editor.Templates
 			stringBuilder.Append(type ?? "?");
 			stringBuilder.AppendSpace();
 			stringBuilder.Append(id);
+
+			if (!string.IsNullOrEmpty(defaultValue))
+			{
+				stringBuilder.Append(" = ");
+				stringBuilder.Append(defaultValue);
+			}
+
 			stringBuilder.Append(';');
 		}
 	}

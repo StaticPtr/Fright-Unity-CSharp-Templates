@@ -53,6 +53,7 @@ namespace Fright.Editor.Templates
 			if (comment != null)
 			{
 				stringBuilder.AppendWithIndentation("/// " + comment, indentationLevel);
+				stringBuilder.Append("\n");
 			}
 
 			//Signature
@@ -102,7 +103,13 @@ namespace Fright.Editor.Templates
 				stringBuilder.Append("\n");
 				stringBuilder.AppendIndentations(indentationLevel);
 				stringBuilder.Append("{\n");
-				stringBuilder.AppendWithIndentation(body, indentationLevel + 1);
+
+				if (body != null)
+				{
+					stringBuilder.AppendWithIndentation(body, indentationLevel + 1);
+					stringBuilder.Append("\n");
+				}
+
 				stringBuilder.AppendIndentations(indentationLevel);
 				stringBuilder.Append("}");
 			}

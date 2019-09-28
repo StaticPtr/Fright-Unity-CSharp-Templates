@@ -32,7 +32,11 @@ namespace Fright.Editor.Templates
 				{
 					stringBuilder.AppendIndentations(indentation);
 					stringBuilder.Append(lines[i]);
-					stringBuilder.Append("\n");
+
+					if (i < lines.Length - 1)
+					{
+						stringBuilder.Append("\n");
+					}
 				}
 			}
 		}

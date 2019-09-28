@@ -57,6 +57,7 @@ namespace Fright.Editor.Templates
 			if (comment != null)
 			{
 				stringBuilder.AppendWithIndentation("/// " + comment, indentationLevel);
+				stringBuilder.Append("\n");
 			}
 
 			//Signature

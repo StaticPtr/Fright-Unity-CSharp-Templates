@@ -108,6 +108,11 @@ namespace Fright.Editor.Templates
 					result.ConstructFromXml(node, document);
 				}
 			}
+			else if (node is XmlText)
+			{
+				result = new XmlCodeblock();
+				result.ConstructFromXml(node, document);
+			}
 
 			//Return the result
 			return result;

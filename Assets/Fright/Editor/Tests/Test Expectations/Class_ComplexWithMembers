@@ -2,7 +2,7 @@ public class Test : Object, Interface1, Interface2, Interface3
 {
 	public int x;
 	public float y;
-	protected decimal z;
+	protected decimal z = 23.0m;
 	private static string ss;
 
 	public float Add(float lhs, float rhs)

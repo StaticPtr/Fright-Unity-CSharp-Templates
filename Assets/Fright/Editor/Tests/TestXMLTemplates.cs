@@ -13,6 +13,7 @@ namespace Fright.Editor.Tests
 		[TestCase("Complex")]
 		[TestCase("WithUsings")]
 		[TestCase("WithNamespace")]
+		[TestCase("WithCodeblocks")]
 		public void RunXmlToCodeTest(string id)
 		{
 			string xml = GetXml(id);

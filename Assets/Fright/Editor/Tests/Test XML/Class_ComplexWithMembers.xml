@@ -6,7 +6,7 @@
 	<!-- Members -->
 	<member id="x" type="int" access="public" />
 	<member id="y" type="float" access="public" />
-	<member id="z" type="decimal" access="protected" />
+	<member id="z" type="decimal" access="protected" default="23.0m"/>
 	<member id="ss" type="string" access="private" static="true" />
 
 	<!-- Add(float, float) : float -->
