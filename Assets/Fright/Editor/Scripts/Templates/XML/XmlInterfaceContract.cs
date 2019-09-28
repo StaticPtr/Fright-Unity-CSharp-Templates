@@ -12,11 +12,6 @@ namespace Fright.Editor.Templates
 			get { return "interface-contract"; }
 		}
 
-		public XmlInterfaceContract(XmlNode node, XmlDocument document)
-		{
-			ConstructFromXml(node, document);
-		}
-
 		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel)
 		{
 			throw new System.NotImplementedException();

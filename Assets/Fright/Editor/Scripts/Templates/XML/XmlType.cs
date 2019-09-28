@@ -15,7 +15,7 @@ namespace Fright.Editor.Templates
 		public string @base;
 		public string comment;
 		public List<XmlInterfaceContract> interfaces = new List<XmlInterfaceContract>();
-		public List<XmlFunction> functions = new List<XmlFunction>();
+		public List<XmlBase> children = new List<XmlBase>();
 
 		public abstract string kind
 		{
@@ -37,15 +37,15 @@ namespace Fright.Editor.Templates
 			//Children
 			foreach (XmlNode child in node.ChildNodes)
 			{
-				if (child.LocalName.Equals("interface-contract", System.StringComparison.InvariantCultureIgnoreCase))
+				XmlBase xmlObj = XmlTemplate.CreateXmlObjectFromNode(child, document);
+
+				if (xmlObj is XmlInterfaceContract)
 				{
-					interfaces.Add(new XmlInterfaceContract(child, document));
+					interfaces.Add(xmlObj as XmlInterfaceContract);
 				}
-				else if (child.LocalName.Equals("function", System.StringComparison.InvariantCultureIgnoreCase))
+				else if (xmlObj != null)
 				{
-					XmlFunction function = new XmlFunction();
-					function.ConstructFromXml(child, document);
-					functions.Add(function);
+					children.Add(xmlObj);
 				}
 			}
 		}
@@ -80,16 +80,7 @@ namespace Fright.Editor.Templates
 			stringBuilder.Append("{\n");
 
 			//Body
-			for (int i = 0; i < functions.Count; ++i)
-			{
-				if (i != 0)
-				{
-					stringBuilder.Append("\n\n");
-				}
-
-				XmlFunction function = functions[i];
-				function.ToCSharp(stringBuilder, indentationLevel + 1);
-			}
+			XmlTemplate.ChildrenToCSharp(stringBuilder, indentationLevel + 1, children);
 
 			//Body end
 			stringBuilder.Append("\n");

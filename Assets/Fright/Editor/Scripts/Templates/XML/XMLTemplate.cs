@@ -2,24 +2,30 @@
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Fright.Editor.Templates
 {
 	/// Describes a template made from Xml that can be used to make a C# file
 	public class XmlTemplate : XmlBase
 	{
-		private static Dictionary<string, System.Type> xmlBaseTypes = new Dictionary<string, System.Type>()
-		{
-			{"function", typeof(XmlFunction)},
-			{"class", typeof(XmlClass)},
-			{"struct", typeof(XmlStruct)},
-			{"using", typeof(XmlUsingNamespace)},
-			{"namespace", typeof(XmlNamespace)},
-		};
+		private static Dictionary<string, System.Type> _xmlBaseTypes;
 
 		public System.Version version;
 		public List<XmlUsingNamespace> usings = new List<XmlUsingNamespace>();
 		public List<XmlBase> children = new List<XmlBase>();
+
+		private static Dictionary<string, System.Type> xmlBaseTypes
+		{
+			get
+			{
+				if (_xmlBaseTypes == null)
+				{
+					FindAllTagTypes();
+				}
+				return _xmlBaseTypes;
+			}
+		}
 
 		public IEnumerable<XmlBase> allChildren
 		{
@@ -105,6 +111,31 @@ namespace Fright.Editor.Templates
 
 			//Return the result
 			return result;
+		}
+
+		private static void FindAllTagTypes()
+		{
+			_xmlBaseTypes = new Dictionary<string, System.Type>();
+
+			//Find all the XmlBase types in any of the assemblies
+			foreach(Assembly assembly in System.AppDomain.CurrentDomain.GetAssemblies())
+			{
+				foreach(System.Type type in assembly.GetExportedTypes())
+				{
+					if (!type.IsAbstract && !type.IsGenericType && typeof(XmlBase).IsAssignableFrom(type))
+					{
+						try
+						{
+							XmlBase obj = System.Activator.CreateInstance(type) as XmlBase;
+							xmlBaseTypes[obj.xmlType.ToLower()] = type;
+						}
+						catch (System.Exception e)
+						{
+							UnityEngine.Debug.LogException(e);
+						}
+					}
+				}
+			}
 		}
 	}
 }

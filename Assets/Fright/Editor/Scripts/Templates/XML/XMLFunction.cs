@@ -107,14 +107,5 @@ namespace Fright.Editor.Templates
 				stringBuilder.Append("}");
 			}
 		}
-
-		/// Describes how a function is virtualized
-		public enum Virtuality
-		{
-			none,
-			@abstract,
-			@virtual,
-			@override,
-		}
 	}
 }

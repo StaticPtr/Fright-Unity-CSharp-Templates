@@ -15,6 +15,7 @@ namespace Fright.Editor.Tests
 		[TestCase("OnlyInterfaces")]
 		[TestCase("BaseAndInterfaces")]
 		[TestCase("Complex")]
+		[TestCase("ComplexWithMembers")]
 		public void RunXmlToCodeTestForClass(string id)
 		{
 			string xml = GetXml(id);
@@ -31,6 +32,7 @@ namespace Fright.Editor.Tests
 		}
 
 		[TestCase("ComplexStruct")]
+		[TestCase("ComplexStructWithMembers")]
 		public void RunXmlToCodeTestForStruct(string id)
 		{
 			string xml = GetXml(id);

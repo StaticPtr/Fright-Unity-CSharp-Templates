@@ -1,0 +1,25 @@
+<class id="Test" base="Object" access="public">
+	<interface-contract id="Interface1" />
+	<interface-contract id="Interface2" />
+	<interface-contract id="Interface3" />
+	
+	<!-- Members -->
+	<member id="x" type="int" access="public" />
+	<member id="y" type="float" access="public" />
+	<member id="z" type="decimal" access="protected" />
+	<member id="ss" type="string" access="private" static="true" />
+
+	<!-- Add(float, float) : float -->
+	<function id="Add" access="public" returnType="float">
+		<argument id="lhs" type="float" />
+		<argument id="rhs" type="float" />
+int result = lhs + rhs;
+Debug.Log(result);
+return result;
+	</function>
+
+	<!-- DoSomething() : void -->
+	<function id="DoSomething" access="public" static="true" returnType="string">
+return "Test";
+	</function>
+</class>
