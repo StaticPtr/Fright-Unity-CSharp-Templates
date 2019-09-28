@@ -14,6 +14,7 @@ namespace Fright.Editor.Templates
 			{"class", typeof(XmlClass)},
 			{"struct", typeof(XmlStruct)},
 			{"using", typeof(XmlUsingNamespace)},
+			{"namespace", typeof(XmlNamespace)},
 		};
 
 		public System.Version version;
@@ -58,16 +59,15 @@ namespace Fright.Editor.Templates
 		/// Converts the XML object into C# and adds it to the string builder
 		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel)
 		{
-			//Usings
-			//...
+			ChildrenToCSharp(stringBuilder, indentationLevel, allChildren);
+		}
 
-			//Namespaces
-			//...
-
-			//Children
+		/// Converts multiple XmlBase objects into C#
+		public static void ChildrenToCSharp(StringBuilder stringBuilder, int indentationLevel, IEnumerable<XmlBase> children)
+		{
 			bool isFirstChild = true;
 
-			foreach(var child in allChildren)
+			foreach (XmlBase child in children)
 			{
 				if (isFirstChild)
 				{
