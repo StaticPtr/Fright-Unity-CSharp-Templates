@@ -18,7 +18,29 @@ namespace Fright.Editor.Templates
 				result = attribute != null ? attribute.Value : fallback;
 			}
 
-			/// Return the result
+			//Return the result
+			return result;
+		}
+
+		public static T GetAttribute<T>(this XmlNode node, string attributeName, T fallback = default(T))
+		{
+			T result = fallback;
+			string stringValue = node.GetAttribute(attributeName);
+
+			//Check if there is any value at all
+			if (stringValue != null)
+			{
+				try
+				{
+					result = (T)System.Convert.ChangeType(stringValue, typeof(T));
+				}
+				catch
+				{
+					result = fallback;
+				}
+			}
+
+			//Return the result
 			return result;
 		}
 

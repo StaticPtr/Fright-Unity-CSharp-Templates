@@ -13,10 +13,28 @@ namespace Fright.Editor.Templates
 			{"function", typeof(XmlFunction)},
 			{"class", typeof(XmlClass)},
 			{"struct", typeof(XmlStruct)},
+			{"using", typeof(XmlUsingNamespace)},
 		};
 
 		public System.Version version;
+		public List<XmlUsingNamespace> usings = new List<XmlUsingNamespace>();
 		public List<XmlBase> children = new List<XmlBase>();
+
+		public IEnumerable<XmlBase> allChildren
+		{
+			get
+			{
+				foreach(var @using in usings)
+				{
+					yield return @using;
+				}
+
+				foreach(var child in children)
+				{
+					yield return child;
+				}
+			}
+		}
 
 		public override void ConstructFromXml(XmlNode node, XmlDocument document)
 		{
@@ -49,7 +67,7 @@ namespace Fright.Editor.Templates
 			//Children
 			bool isFirstChild = true;
 
-			foreach(var child in children)
+			foreach(var child in allChildren)
 			{
 				if (isFirstChild)
 				{
@@ -57,7 +75,7 @@ namespace Fright.Editor.Templates
 				}
 				else
 				{
-					stringBuilder.Append("\n\n");
+					stringBuilder.Append(child.shouldAddLeadingNewline ? "\n\n" : "\n");
 				}
 
 				child.ToCSharp(stringBuilder, indentationLevel);

@@ -11,6 +11,7 @@ namespace Fright.Editor.Tests
 	public class Templates
 	{
 		[TestCase("Complex")]
+		[TestCase("WithUsings")]
 		public void RunXmlToCodeTest(string id)
 		{
 			string xml = GetXml(id);
