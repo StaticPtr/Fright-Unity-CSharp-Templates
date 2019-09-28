@@ -9,6 +9,11 @@ namespace Fright.Editor.Templates
 	{
 		public List<XmlBase> children = new List<XmlBase>();
 
+		public override string xmlType
+		{
+			get { return "namespace"; }
+		}
+
 		public override void ConstructFromXml(XmlNode node, XmlDocument document)
 		{
 			base.ConstructFromXml(node, document);

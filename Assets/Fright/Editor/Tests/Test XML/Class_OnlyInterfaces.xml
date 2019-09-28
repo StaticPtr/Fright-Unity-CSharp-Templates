@@ -1,5 +1,5 @@
 <class id="Test" access="public">
-	<interface id="Interface1" />
-	<interface id="Interface2" />
-	<interface id="Interface3" />
+	<interface-contract id="Interface1" />
+	<interface-contract id="Interface2" />
+	<interface-contract id="Interface3" />
 </class>

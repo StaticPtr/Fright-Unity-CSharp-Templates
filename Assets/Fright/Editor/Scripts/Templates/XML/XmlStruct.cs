@@ -12,5 +12,10 @@ namespace Fright.Editor.Templates
 		{
 			get { return "struct"; }
 		}
+
+		public override string xmlType
+		{
+			get { return "struct"; }
+		}
 	}
 }

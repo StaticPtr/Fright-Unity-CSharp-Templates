@@ -14,7 +14,7 @@ namespace Fright.Editor.Templates
 		public bool isAbstract;
 		public string @base;
 		public string comment;
-		public List<XmlInterace> interfaces = new List<XmlInterace>();
+		public List<XmlInterfaceContract> interfaces = new List<XmlInterfaceContract>();
 		public List<XmlFunction> functions = new List<XmlFunction>();
 
 		public abstract string kind
@@ -37,9 +37,9 @@ namespace Fright.Editor.Templates
 			//Children
 			foreach (XmlNode child in node.ChildNodes)
 			{
-				if (child.LocalName.Equals("interface", System.StringComparison.InvariantCultureIgnoreCase))
+				if (child.LocalName.Equals("interface-contract", System.StringComparison.InvariantCultureIgnoreCase))
 				{
-					interfaces.Add(new XmlInterace(child, document));
+					interfaces.Add(new XmlInterfaceContract(child, document));
 				}
 				else if (child.LocalName.Equals("function", System.StringComparison.InvariantCultureIgnoreCase))
 				{

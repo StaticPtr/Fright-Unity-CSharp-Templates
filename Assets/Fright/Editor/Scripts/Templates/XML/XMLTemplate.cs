@@ -37,6 +37,11 @@ namespace Fright.Editor.Templates
 			}
 		}
 
+		public override string xmlType
+		{
+			get { return "template"; }
+		}
+
 		public override void ConstructFromXml(XmlNode node, XmlDocument document)
 		{
 			base.ConstructFromXml(node, document);

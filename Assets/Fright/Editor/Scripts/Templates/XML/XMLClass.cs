@@ -10,7 +10,12 @@ namespace Fright.Editor.Templates
 	{
 		public override string kind
 		{
-			get	{ return "class"; }
+			get { return "class"; }
+		}
+
+		public override string xmlType
+		{
+			get { return "class"; }
 		}
 	}
 }

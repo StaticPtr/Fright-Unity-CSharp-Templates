@@ -1,8 +1,8 @@
 <template id="My Test Template" version="1.0.0.0">
 	<class id="Test" base="Object" access="public">
-		<interface id="Interface1" />
-		<interface id="Interface2" />
-		<interface id="Interface3" />
+		<interface-contract id="Interface1" />
+		<interface-contract id="Interface2" />
+		<interface-contract id="Interface3" />
 		
 		<!-- Add(float, float) : float -->
 		<function id="Add" access="public" returnType="float">

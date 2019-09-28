@@ -10,6 +10,8 @@ namespace Fright.Editor.Templates
 	{
 		/// The identifier for the XML object
 		public string id;
+		/// The XML tag that this object comes from
+		public abstract string xmlType { get; }
 
 		/// Should an extra new-line be added before this object if there is another object
 		public virtual bool shouldAddLeadingNewline

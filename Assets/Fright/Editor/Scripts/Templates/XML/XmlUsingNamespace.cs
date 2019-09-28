@@ -15,6 +15,11 @@ namespace Fright.Editor.Templates
 			get { return false; }
 		}
 
+		public override string xmlType
+		{
+			get { return "using"; }
+		}
+
 		public override void ConstructFromXml(XmlNode node, XmlDocument document)
 		{
 			base.ConstructFromXml(node, document);

@@ -5,9 +5,14 @@ using System.Collections.Generic;
 
 namespace Fright.Editor.Templates
 {
-	public class XmlInterace : XmlBase
+	public class XmlInterfaceContract : XmlBase
 	{
-		public XmlInterace(XmlNode node, XmlDocument document)
+		public override string xmlType
+		{
+			get { return "interface-contract"; }
+		}
+
+		public XmlInterfaceContract(XmlNode node, XmlDocument document)
 		{
 			ConstructFromXml(node, document);
 		}
