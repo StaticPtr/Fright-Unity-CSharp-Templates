@@ -1,9 +1,9 @@
 <template id="Class" version="1.0.0.0">
-	<build-option name="Name" type="string" replacement="name" default="ClassName" />
+	<build-option name="Filename" type="string" replacement="filename" default="ClassName" />
 
 	<using id="System.Collections" optional="true" onByDefault="true" />
 	<using id="System.Collections.Generic" optional="true" onByDefault="true" />
 	<using id="UnityEngine" optional="true" onByDefault="false" />
 
-	<class id="{name}" access="public"/>
+	<class id="{filename}" access="public"/>
 </template>

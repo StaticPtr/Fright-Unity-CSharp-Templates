@@ -12,6 +12,7 @@ namespace Fright.Editor.Templates
 	{
 		private const float MIN_WIDTH = 450.0f;
 		private const float MIN_HEIGHT = 400.0f;
+		private const float SETTINGS_PANEL_WIDTH = 300.0f;
 
 		[SerializeField] private string lastKnownCreationPath;
 		[SerializeField] private Rect sharedWindowPosition = new Rect(Vector2.zero, new Vector2(700.0f, 400.0f));
@@ -34,7 +35,14 @@ namespace Fright.Editor.Templates
 				//If there is a selected object then grab the folder that it's in
 				if (!string.IsNullOrEmpty(selectedObjectPath))
 				{
-					result = Path.GetDirectoryName(selectedObjectPath);	
+					if (Directory.Exists(selectedObjectPath))
+					{
+						result = selectedObjectPath;
+					}
+					else
+					{
+						result = Path.GetDirectoryName(selectedObjectPath);
+					}
 				}
 
 				//Return the result
@@ -96,6 +104,23 @@ namespace Fright.Editor.Templates
 			}
 		}
 
+		private void CreateFileFromTemplate()
+		{
+			//Create the file
+			string sourceCode = TemplateBuilder.BuildCodeFromTemplate(template, templateSettings);
+			string filePath = lastKnownCreationPath + "/" + (templateSettings.GetBuildOptionValue("filename") ?? template.id) + ".cs";
+			File.WriteAllText(filePath, sourceCode);
+
+			//Open the file
+			AssetDatabase.Refresh();
+			Object createdFile = AssetDatabase.LoadAssetAtPath<Object>(filePath);
+			Selection.activeObject = createdFile;
+			AssetDatabase.OpenAsset(createdFile);
+
+			//Close this window
+			Close();
+		}
+
 		#region Drawing
 		/// Draws the UI of the template builder window
 		private void OnGUI()
@@ -125,7 +150,7 @@ namespace Fright.Editor.Templates
 				EditorGUILayout.BeginHorizontal();
 				{
 					//Template Settings
-					EditorGUILayout.BeginVertical(GUILayout.Width(300.0f), GUILayout.ExpandHeight(true));
+					EditorGUILayout.BeginVertical(GUILayout.Width(SETTINGS_PANEL_WIDTH), GUILayout.ExpandHeight(true));
 					{
 						DrawTemplateSettings();
 					}
@@ -209,8 +234,13 @@ namespace Fright.Editor.Templates
 				EditorGUILayout.LabelField(lastKnownCreationPath ?? "select a folder in the project view", EditorStyles.miniLabel);
 				EditorGUILayout.Space();
 
-				GUI.enabled = false;
-				GUILayout.Button("Create", EditorStyles.toolbarButton, GUILayout.Width(100.0f));
+				GUI.enabled = !string.IsNullOrEmpty(lastKnownCreationPath) && template != null;
+				{
+					if (GUILayout.Button("Create", EditorStyles.toolbarButton, GUILayout.Width(position.size.x - SETTINGS_PANEL_WIDTH - 10.0f)))
+					{
+						CreateFileFromTemplate();
+					}
+				}
 				GUI.enabled = true;
 			}
 			EditorGUILayout.EndHorizontal();
