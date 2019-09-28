@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System.IO;
+using System.Xml;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,6 +25,20 @@ namespace Fright.Editor.Templates
 
 			//Return the result
 			return code;
+		}
+
+		public static IEnumerable<XmlTemplate> FindAllTemplatesInProject()
+		{
+			const string TEMPLATE_EXTENSION = ".xtemplate";
+			var files = Directory.GetFiles(Application.dataPath + "/", "*" + TEMPLATE_EXTENSION, SearchOption.AllDirectories);
+
+			foreach(string filePath in files)
+			{
+				if (Path.GetExtension(filePath) == TEMPLATE_EXTENSION)
+				{
+					yield return XmlTemplate.FromFile(filePath);
+				}
+			}
 		}
 
 		/// Changes all of the line endings in the provided text into the specified format

@@ -17,6 +17,7 @@ namespace Fright.Editor.Templates
 		[SerializeField] private Vector2 templatePreviewScrollPos = Vector2.zero;
 		
 		private TemplateBuilderSettings templateSettings = new TemplateBuilderSettings();
+		private List<XmlTemplate> templates = null;
 		private XmlTemplate template = null;
 		private string codePreview = null;
 
@@ -69,52 +70,85 @@ namespace Fright.Editor.Templates
 			this.position = position;
 		}
 
-		private void Awake()
+		private void RebuildTemplateListIfNecessary()
 		{
-			template = XmlTemplate.FromFile("Assets/Fright/Editor/Tests/Test XML/Template_WithCodeblocks.xml");
+			if (templates == null)
+			{
+				templates = new List<XmlTemplate>(TemplateBuilder.FindAllTemplatesInProject());
+
+				if (templates.Count > 0)
+				{
+					template = templates[0];
+				}
+			}
 		}
 
 		#region Drawing
 		/// Draws the UI of the template builder window
 		private void OnGUI()
 		{
-			//Position update
+			RebuildTemplateListIfNecessary();
 			ApplyMinimumsToWindow();
 			sharedWindowPosition = position;
 
 			//Update the preview
-			if (codePreview == null)
+			if (codePreview == null && template != null)
 			{
 				codePreview = TemplateBuilder.BuildCodeFromTemplate(template, templateSettings);
 				codePreview = codePreview.Replace("\t", "    "); // Unity doesn't render tabs very well in the editor
 			}
 
 			//Drawing
-			DrawToolbar();
-
-			EditorGUILayout.BeginHorizontal();
+			EditorGUI.BeginChangeCheck();
 			{
-				//Template Settings
-				EditorGUILayout.BeginVertical(GUILayout.Width(200.0f), GUILayout.ExpandHeight(true));
+				EditorGUILayout.BeginHorizontal();
 				{
-					DrawTemplateSettings();
-				}
-				EditorGUILayout.EndVertical();
+					//Template Settings
+					EditorGUILayout.BeginVertical(GUILayout.Width(200.0f), GUILayout.ExpandHeight(true));
+					{
+						DrawTemplateSettings();
+					}
+					EditorGUILayout.EndVertical();
 
-				//Template Preview
-				EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
-				{
-					DrawTemplatePreview();
+					//Template Preview
+					EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+					{
+						DrawTemplatePreview();
+					}
+					EditorGUILayout.EndVertical();
 				}
-				EditorGUILayout.EndVertical();
+				EditorGUILayout.EndHorizontal();
+
+				DrawToolbar();
 			}
-			EditorGUILayout.EndHorizontal();
+			if (EditorGUI.EndChangeCheck())
+			{
+				codePreview = null;
+			}
 		}
 
 		private void DrawTemplateSettings()
 		{
-			EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
-			templateSettings.lineEndings = (TemplateBuilder.LineEndings)EditorGUILayout.EnumPopup("Line Endings", templateSettings.lineEndings);
+			EditorGUILayout.Space();
+			EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+			{
+				EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
+
+				if (EditorGUILayout.DropdownButton(new GUIContent(template != null ? template.id : "<select template>"), FocusType.Keyboard))
+				{
+					GenericMenu menu = new GenericMenu();
+
+					foreach(var template in templates)
+					{
+						menu.AddItem(new GUIContent(template.id), false, () => this.template = template);
+					}
+
+					menu.ShowAsContext();
+				}
+
+				templateSettings.lineEndings = (TemplateBuilder.LineEndings)EditorGUILayout.EnumPopup("Line Endings", templateSettings.lineEndings);
+			}
+			EditorGUILayout.EndVertical();
 		}
 
 		private void DrawTemplatePreview()
@@ -122,7 +156,7 @@ namespace Fright.Editor.Templates
 			templatePreviewScrollPos = EditorGUILayout.BeginScrollView(templatePreviewScrollPos);
 			GUI.enabled = false;
 			{
-				EditorGUILayout.TextArea(codePreview, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+				EditorGUILayout.TextArea(codePreview ?? string.Empty, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 			}
 			GUI.enabled = true;
 			EditorGUILayout.EndScrollView();
@@ -132,6 +166,7 @@ namespace Fright.Editor.Templates
 		{
 			EditorGUILayout.BeginHorizontal(EditorStyles.toolbar, GUILayout.ExpandHeight(true));
 			{
+				EditorGUILayout.LabelField(templateCreatePath ?? "select a folder in the project view", EditorStyles.miniLabel);
 				EditorGUILayout.Space();
 			}
 			EditorGUILayout.EndHorizontal();
