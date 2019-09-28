@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System.IO;
+using System.Xml;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
@@ -142,5 +143,24 @@ namespace Fright.Editor.Templates
 				}
 			}
 		}
+
+		#region Statics
+		public static XmlTemplate FromFile(string path)
+		{
+			XmlTemplate result = null;
+
+			if (File.Exists(path))
+			{
+				XmlDocument document = new XmlDocument();
+				document.Load(path);
+
+				XmlNode templateNode = document.GetFirstChild("template");
+				result = new XmlTemplate();
+				result.ConstructFromXml(templateNode, document);
+			}
+
+			return result;
+		}
+		#endregion
 	}
 }
