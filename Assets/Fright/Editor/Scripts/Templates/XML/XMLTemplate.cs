@@ -98,6 +98,7 @@ namespace Fright.Editor.Templates
 
 		public IEnumerable<XmlBase> GetSerializableChildren(TemplateBuilderSettings settings)
 		{
+			//Template usings
 			foreach(var @using in usings)
 			{
 				if (!@using.isOptional || settings == null || settings.IsOptionalUsingEnabled(@using.id))
@@ -106,6 +107,19 @@ namespace Fright.Editor.Templates
 				}
 			}
 
+			//Custom usings
+			foreach(var @using in settings.optionalUsings)
+			{
+				if (@using.isCustom && @using.isEnabled && !string.IsNullOrEmpty(@using.id))
+				{
+					yield return new XmlUsingNamespace()
+					{
+						id = @using.id,
+					};
+				}
+			}
+
+			//Other children
 			foreach(var child in children)
 			{
 				yield return child;

@@ -113,6 +113,7 @@ namespace Fright.Editor.Templates
 					{
 						id = xmlUsing.id,
 						isEnabled = xmlUsing.isOnByDefault,
+						isCustom = false,
 					};
 				}
 			}
@@ -124,6 +125,7 @@ namespace Fright.Editor.Templates
 		{
 			public string id;
 			public bool isEnabled;
+			public bool isCustom;
 		}
 		#endregion
 	}

@@ -193,15 +193,30 @@ namespace Fright.Editor.Templates
 			}
 
 			//Optional Usings
-			if (templateSettings.optionalUsings.Count > 0)
+			EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 			{
-				EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+				EditorGUILayout.LabelField("Namespaces", EditorStyles.boldLabel);
+				DrawOptionalUsings();
+
+				EditorGUILayout.BeginHorizontal();
 				{
-					EditorGUILayout.LabelField("Namespaces", EditorStyles.boldLabel);
-					DrawOptionalUsings();
+					EditorGUILayout.Space();
+
+					if (GUILayout.Button("Add", EditorStyles.miniButton, GUILayout.Width(80.0f)))
+					{
+						templateSettings.optionalUsings.Add(
+							new TemplateBuilderSettings.OptionalUsing()
+							{
+								isCustom = true,
+								isEnabled = true,
+							}
+						);
+					}
 				}
-				EditorGUILayout.EndVertical();
+				EditorGUILayout.EndHorizontal();
+				EditorGUILayout.Space();
 			}
+			EditorGUILayout.EndVertical();
 
 			//Create button
 			EditorGUILayout.BeginVertical(GUILayout.ExpandHeight(true));
@@ -275,8 +290,31 @@ namespace Fright.Editor.Templates
 		{
 			foreach(var optionalUsing in templateSettings.optionalUsings)
 			{
-				optionalUsing.isEnabled = EditorGUILayout.ToggleLeft(optionalUsing.id, optionalUsing.isEnabled);
+				if (optionalUsing.isCustom)
+				{
+					DrawCustomOptionalUsing(optionalUsing);
+				}
+				else
+				{
+					optionalUsing.isEnabled = EditorGUILayout.ToggleLeft(optionalUsing.id, optionalUsing.isEnabled);
+				}
 			}
+		}
+
+		private void DrawCustomOptionalUsing(TemplateBuilderSettings.OptionalUsing optionalUsing)
+		{
+			EditorGUILayout.BeginHorizontal();
+			{
+				optionalUsing.isEnabled = EditorGUILayout.Toggle(optionalUsing.isEnabled, GUILayout.Width(12.0f));
+				optionalUsing.id = EditorGUILayout.TextField(optionalUsing.id);
+
+				if (GUILayout.Button("X", EditorStyles.miniButtonRight, GUILayout.Width(20.0f)))
+				{
+					templateSettings.optionalUsings.Remove(optionalUsing);
+					GUIUtility.ExitGUI();
+				}
+			}
+			EditorGUILayout.EndHorizontal();
 		}
 		#endregion
 	}
