@@ -7,6 +7,8 @@
 	<using id="UnityEngine" optional="true" onByDefault="false" />
 
 	<namespace id="{namespace}">
-		<class id="{filename}" access="public"/>
+		<class id="{filename}" access="public">
+//...
+		</class>
 	</namespace>
 </template>
