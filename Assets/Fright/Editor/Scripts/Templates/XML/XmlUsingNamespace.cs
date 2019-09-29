@@ -27,7 +27,7 @@ namespace Fright.Editor.Templates
 			isOptional = node.GetAttribute<bool>("optional");
 		}
 
-		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel)
+		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings settings)
 		{
 			stringBuilder.Append("using ");
 			stringBuilder.Append(id);

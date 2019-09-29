@@ -51,7 +51,7 @@ namespace Fright.Editor.Templates
 		}
 
 		/// Converts the XML object into C# and adds it to the string builder
-		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel)
+		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings settings)
 		{
 			//Comment
 			if (comment != null)
@@ -81,7 +81,7 @@ namespace Fright.Editor.Templates
 			stringBuilder.Append("{\n");
 
 			//Body
-			XmlTemplate.ChildrenToCSharp(stringBuilder, indentationLevel + 1, children);
+			XmlTemplate.ChildrenToCSharp(stringBuilder, indentationLevel + 1, settings, children);
 
 			//Body end
 			stringBuilder.Append("\n");

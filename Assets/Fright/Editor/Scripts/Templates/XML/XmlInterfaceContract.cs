@@ -12,7 +12,7 @@ namespace Fright.Editor.Templates
 			get { return "interface-contract"; }
 		}
 
-		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel)
+		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings settings)
 		{
 			throw new System.NotImplementedException();
 		}

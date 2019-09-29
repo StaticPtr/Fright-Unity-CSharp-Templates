@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Fright.Editor.Templates
 {
-	public class TemplateBuilderSettings
+	public class TemplateSettings
 	{
 		public TemplateBuilder.LineEndings lineEndings = TemplateBuilder.LineEndings.unix;
 		public List<BuildOption> buildOptions = new List<BuildOption>();
@@ -20,6 +20,16 @@ namespace Fright.Editor.Templates
 				buildOptions.AddRange(ConstructBuildOptionsForTemplate(template));
 				optionalUsings.AddRange(ConstructOptionalUsingsForTemplate(template));
 			}
+		}
+
+		public string ApplyReplacementsToText(string text)
+		{
+			foreach(var buildOption in buildOptions)
+			{
+				text = text.Replace("{" + buildOption.id + "}", buildOption.textValue);
+			}
+
+			return text;
 		}
 
 		public bool IsOptionalUsingEnabled(string optionalUsingID)
@@ -63,12 +73,12 @@ namespace Fright.Editor.Templates
 		}
 
 		#region Constructor
-		public TemplateBuilderSettings()
+		public TemplateSettings()
 		{
 			//...
 		}
 
-		public TemplateBuilderSettings(XmlTemplate template)
+		public TemplateSettings(XmlTemplate template)
 		{
 			ChangeForNewTemplate(template);
 		}

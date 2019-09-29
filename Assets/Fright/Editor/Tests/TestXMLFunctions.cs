@@ -30,7 +30,7 @@ namespace Fright.Editor.Tests
 		private string SerializeToCode(XmlCSharpBase xmlCSharp)
 		{
 			StringBuilder generatedCode = new StringBuilder();
-			xmlCSharp.ToCSharp(generatedCode, 0);
+			xmlCSharp.ToCSharp(generatedCode, 0, null);
 			return generatedCode.ToString().Replace("\r\n", "\n");
 		}
 

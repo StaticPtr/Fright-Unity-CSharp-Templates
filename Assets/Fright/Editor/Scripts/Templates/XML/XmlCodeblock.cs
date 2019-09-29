@@ -34,7 +34,7 @@ namespace Fright.Editor.Templates
 			}
 		}
 
-		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel)
+		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings settings)
 		{
 			stringBuilder.AppendWithIndentation(body, indentationLevel);
 		}

@@ -18,8 +18,13 @@ namespace Fright.Editor.Templates
 			get { return "build-option"; }
 		}
 
+		public override bool shouldUse
+		{
+			get { return false; }
+		}
+
 		/// Converts the XML object into C# and adds it to the string builder
-		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel)
+		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings settings)
 		{
 			throw new System.NotSupportedException();
 		}

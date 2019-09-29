@@ -1,9 +1,12 @@
 <template id="Class" version="1.0.0.0">
 	<build-option name="Filename" type="string" replacement="filename" default="ClassName" />
+	<build-option name="Namespace" type="string" replacement="namespace" default="" />
 
 	<using id="System.Collections" optional="true" onByDefault="true" />
 	<using id="System.Collections.Generic" optional="true" onByDefault="true" />
 	<using id="UnityEngine" optional="true" onByDefault="false" />
 
-	<class id="{filename}" access="public"/>
+	<namespace id="{namespace}">
+		<class id="{filename}" access="public"/>
+	</namespace>
 </template>

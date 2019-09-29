@@ -14,7 +14,7 @@ namespace Fright.Editor.Templates
 		public const string WINDOWS_LINE_ENDINGS = "\r\n";
 		public const string UNIX_LINE_ENDINGS = "\n";
 
-		public static string BuildCodeFromTemplate(XmlTemplate template, TemplateBuilderSettings settings)
+		public static string BuildCodeFromTemplate(XmlTemplate template, TemplateSettings settings)
 		{
 			//Create the code
 			StringBuilder codeBuilder = new StringBuilder(_4KiB);
@@ -22,12 +22,7 @@ namespace Fright.Editor.Templates
 
 			//Transform the code
 			string code = NormalizeLineEndings(codeBuilder.ToString(), settings.lineEndings);
-
-			foreach(var xmlBuildOption in template.buildOptions)
-			{
-				string value = settings.GetBuildOptionValue(xmlBuildOption.id) ?? xmlBuildOption.@default ?? "(null)";
-				code = code.Replace("{" + xmlBuildOption.id + "}", value);
-			}
+			code = settings.ApplyReplacementsToText(code);
 
 			//Return the result
 			return code;

@@ -18,7 +18,7 @@ namespace Fright.Editor.Templates
 		[SerializeField] private Rect sharedWindowPosition = new Rect(Vector2.zero, new Vector2(700.0f, 400.0f));
 		[SerializeField] private Vector2 templatePreviewScrollPos = Vector2.zero;
 		
-		private TemplateBuilderSettings templateSettings = new TemplateBuilderSettings();
+		private TemplateSettings templateSettings = new TemplateSettings();
 		private List<XmlTemplate> templates = null;
 		private XmlTemplate template = null;
 		private string codePreview = null;
@@ -205,7 +205,7 @@ namespace Fright.Editor.Templates
 					if (GUILayout.Button("Add", EditorStyles.miniButton, GUILayout.Width(80.0f)))
 					{
 						templateSettings.optionalUsings.Add(
-							new TemplateBuilderSettings.OptionalUsing()
+							new TemplateSettings.OptionalUsing()
 							{
 								isCustom = true,
 								isEnabled = true,
@@ -301,7 +301,7 @@ namespace Fright.Editor.Templates
 			}
 		}
 
-		private void DrawCustomOptionalUsing(TemplateBuilderSettings.OptionalUsing optionalUsing)
+		private void DrawCustomOptionalUsing(TemplateSettings.OptionalUsing optionalUsing)
 		{
 			EditorGUILayout.BeginHorizontal();
 			{

@@ -65,19 +65,13 @@ namespace Fright.Editor.Templates
 		}
 
 		/// Converts the XML object into C# and adds it to the string builder
-		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel)
+		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings settings)
 		{
-			ChildrenToCSharp(stringBuilder, indentationLevel, null);
-		}
-
-		/// Converts the XML object into C# and adds it to the string builder
-		public virtual void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateBuilderSettings settings)
-		{
-			ChildrenToCSharp(stringBuilder, indentationLevel, GetSerializableChildren(settings));
+			ChildrenToCSharp(stringBuilder, indentationLevel, settings, GetSerializableChildren(settings));
 		}
 
 		/// Converts multiple XmlBase objects into C#
-		public static void ChildrenToCSharp(StringBuilder stringBuilder, int indentationLevel, IEnumerable<XmlBase> children)
+		public static void ChildrenToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings settings, IEnumerable<XmlBase> children)
 		{
 			bool isFirstChild = true;
 
@@ -92,11 +86,11 @@ namespace Fright.Editor.Templates
 					stringBuilder.Append(child.shouldAddLeadingNewline ? "\n\n" : "\n");
 				}
 
-				child.ToCSharp(stringBuilder, indentationLevel);
+				child.ToCSharp(stringBuilder, indentationLevel, settings);
 			}
 		}
 
-		public IEnumerable<XmlBase> GetSerializableChildren(TemplateBuilderSettings settings)
+		public IEnumerable<XmlBase> GetSerializableChildren(TemplateSettings settings)
 		{
 			//Template usings
 			foreach(var @using in usings)
@@ -108,21 +102,27 @@ namespace Fright.Editor.Templates
 			}
 
 			//Custom usings
-			foreach(var @using in settings.optionalUsings)
+			if (settings != null && settings.optionalUsings != null)
 			{
-				if (@using.isCustom && @using.isEnabled && !string.IsNullOrEmpty(@using.id))
+				foreach(var @using in settings.optionalUsings)
 				{
-					yield return new XmlUsingNamespace()
+					if (@using.isCustom && @using.isEnabled && !string.IsNullOrEmpty(@using.id))
 					{
-						id = @using.id,
-					};
+						yield return new XmlUsingNamespace()
+						{
+							id = @using.id,
+						};
+					}
 				}
 			}
 
 			//Other children
 			foreach(var child in children)
 			{
-				yield return child;
+				if (child.shouldUse)
+				{
+					yield return child;
+				}
 			}
 		}
 

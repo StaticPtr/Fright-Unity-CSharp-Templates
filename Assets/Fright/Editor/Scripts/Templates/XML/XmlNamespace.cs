@@ -14,8 +14,21 @@ namespace Fright.Editor.Templates
 			get { return "namespace"; }
 		}
 
-		public override void ConstructFromXml(XmlNode node, XmlDocument document)
+		public string GetModifiedID(TemplateSettings settings)
 		{
+			string result = id;
+
+			if (settings != null)
+			{
+				result = settings.ApplyReplacementsToText(result);
+			}
+
+			//Return the result
+			return result;
+		}
+
+		public override void ConstructFromXml(XmlNode node, XmlDocument document)
+		{		
 			base.ConstructFromXml(node, document);
 
 			//Children
@@ -30,23 +43,32 @@ namespace Fright.Editor.Templates
 			}
 		}
 
-		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel)
+		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings settings)
 		{
-			//Start
-			stringBuilder.AppendIndentations(indentationLevel);
-			stringBuilder.Append("namespace ");
-			stringBuilder.Append(id);
-			stringBuilder.Append("\n");
-			stringBuilder.AppendIndentations(indentationLevel);
-			stringBuilder.Append("{\n");
+			string modifiedID = GetModifiedID(settings);
 
-			//Body
-			XmlTemplate.ChildrenToCSharp(stringBuilder, indentationLevel + 1, children);
+			if (string.IsNullOrEmpty(modifiedID))
+			{
+				XmlTemplate.ChildrenToCSharp(stringBuilder, indentationLevel, settings, children);
+			}
+			else
+			{
+				//Start
+				stringBuilder.AppendIndentations(indentationLevel);
+				stringBuilder.Append("namespace ");
+				stringBuilder.Append(modifiedID);
+				stringBuilder.Append("\n");
+				stringBuilder.AppendIndentations(indentationLevel);
+				stringBuilder.Append("{\n");
 
-			//End
-			stringBuilder.Append("\n");
-			stringBuilder.AppendIndentations(indentationLevel);
-			stringBuilder.Append("}");
+				//Body
+				XmlTemplate.ChildrenToCSharp(stringBuilder, indentationLevel + 1, settings, children);
+
+				//End
+				stringBuilder.Append("\n");
+				stringBuilder.AppendIndentations(indentationLevel);
+				stringBuilder.Append("}");
+			}
 		}
 	}
 }

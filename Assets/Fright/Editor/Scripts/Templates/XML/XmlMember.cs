@@ -30,7 +30,7 @@ namespace Fright.Editor.Templates
 			defaultValue = node.GetAttribute("default");
 		}
 
-		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel)
+		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings settings)
 		{
 			stringBuilder.AppendIndentations(indentationLevel);
 			stringBuilder.Append(accessibility);
