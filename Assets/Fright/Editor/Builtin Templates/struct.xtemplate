@@ -1,5 +1,5 @@
-<template id="Simple/Class" version="1.0.0.0">
-	<build-option name="Filename" type="string" replacement="filename" default="ClassName" />
+<template id="Simple/Struct" version="1.0.0.0">
+	<build-option name="Filename" type="string" replacement="filename" default="StructName" />
 	<build-option name="Namespace" type="string" replacement="namespace" default="" />
 
 	<using id="System.Collections" optional="true" onByDefault="true" />
@@ -7,6 +7,6 @@
 	<using id="UnityEngine" optional="true" onByDefault="false" />
 
 	<namespace id="{namespace}">
-		<class id="{filename}" access="public"/>
+		<struct id="{filename}" access="public"/>
 	</namespace>
 </template>
