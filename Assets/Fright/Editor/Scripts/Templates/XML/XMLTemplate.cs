@@ -12,6 +12,7 @@ namespace Fright.Editor.Templates
 	{
 		private static Dictionary<string, System.Type> _xmlBaseTypes;
 
+		public int priority;
 		public System.Version version;
 		public List<XmlUsingNamespace> usings = new List<XmlUsingNamespace>();
 		public List<XmlBuildOption> buildOptions = new List<XmlBuildOption>();
@@ -40,6 +41,7 @@ namespace Fright.Editor.Templates
 
 			//One offs
 			version = new System.Version(node.GetAttribute("version", "1.0"));
+			priority = node.GetAttribute<int>("priority", 0);
 
 			//Children
 			foreach(XmlNode child in node.ChildNodes)

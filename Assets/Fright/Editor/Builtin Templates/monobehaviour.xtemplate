@@ -1,0 +1,15 @@
+<template id="MonoBehaviour" version="1.0.0.0" priority="-99">
+	<build-option name="Filename" type="string" replacement="filename" default="BehaviourName" />
+	<build-option name="Namespace" type="string" replacement="namespace" default="" />
+
+	<using id="System.Collections" optional="true" onByDefault="true" />
+	<using id="System.Collections.Generic" optional="true" onByDefault="true" />
+	<using id="UnityEngine" optional="true" onByDefault="true" />
+	<using id="UnityEngine.UI" optional="true" onByDefault="false" />
+
+	<namespace id="{namespace}">
+		<class id="{filename}" access="public" base="MonoBehaviour">
+			<function id="Start" access="private" />
+		</class>
+	</namespace>
+</template>

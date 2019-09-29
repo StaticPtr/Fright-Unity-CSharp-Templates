@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Xml;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +23,8 @@ namespace Fright.Editor.Templates
 		private List<XmlTemplate> templates = null;
 		private XmlTemplate template = null;
 		private string codePreview = null;
+
+		private GUIStyle codePreviewStyle;
 
 		/// The path to the currently selected folder in the project view
 		public static string templateCreatePath
@@ -83,7 +86,7 @@ namespace Fright.Editor.Templates
 		{
 			if (templates == null)
 			{
-				templates = new List<XmlTemplate>(TemplateBuilder.FindAllTemplatesInProject());
+				templates = new List<XmlTemplate>(TemplateBuilder.FindAllTemplatesInProject().OrderBy(t => t.priority));
 
 				if (templates.Count > 0)
 				{
@@ -137,6 +140,12 @@ namespace Fright.Editor.Templates
 			{
 				codePreview = TemplateBuilder.BuildCodeFromTemplate(template, templateSettings);
 				codePreview = codePreview.Replace("\t", "    "); // Unity doesn't render tabs very well in the editor
+			}
+
+			if (codePreviewStyle == null)
+			{
+				codePreviewStyle = new GUIStyle("box");
+				codePreviewStyle.alignment = TextAnchor.UpperLeft;
 			}
 
 			//Drawing
@@ -244,12 +253,21 @@ namespace Fright.Editor.Templates
 
 				if (EditorGUILayout.DropdownButton(new GUIContent(template != null ? template.id : "<select template>"), FocusType.Keyboard))
 				{
+					int lastPriority = int.MinValue;
 					GenericMenu menu = new GenericMenu();
 
 					foreach(var template in templates)
 					{
 						XmlTemplate _template = template;
+
+						//Add a separator
+						if (lastPriority != int.MinValue && _template.priority / 100 != lastPriority / 100)
+						{
+							menu.AddSeparator(Path.GetDirectoryName(_template.id + ".t") + "/");
+						}
+
 						menu.AddItem(new GUIContent(template.id), false, () => SelectTemplate(_template));
+						lastPriority = _template.priority;
 					}
 
 					menu.ShowAsContext();
@@ -261,9 +279,9 @@ namespace Fright.Editor.Templates
 		private void DrawTemplatePreview()
 		{
 			templatePreviewScrollPos = EditorGUILayout.BeginScrollView(templatePreviewScrollPos);
-			GUI.enabled = false;
+			GUI.enabled = true;
 			{
-				EditorGUILayout.TextArea(codePreview ?? string.Empty, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+				EditorGUILayout.LabelField(GUIContent.none, new GUIContent(codePreview ?? string.Empty), codePreviewStyle, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 			}
 			GUI.enabled = true;
 			EditorGUILayout.EndScrollView();
