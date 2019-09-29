@@ -18,7 +18,7 @@ namespace Fright.Editor.Templates
 		{
 			//Create the code
 			StringBuilder codeBuilder = new StringBuilder(_4KiB);
-			template.ToCSharp(codeBuilder, 0);
+			template.ToCSharp(codeBuilder, 0, settings);
 
 			//Transform the code
 			string code = NormalizeLineEndings(codeBuilder.ToString(), settings.lineEndings);
@@ -43,34 +43,6 @@ namespace Fright.Editor.Templates
 				if (Path.GetExtension(filePath) == TEMPLATE_EXTENSION)
 				{
 					yield return XmlTemplate.FromFile(filePath);
-				}
-			}
-		}
-
-		public static IEnumerable<BuildOption> ConstructBuildOptionsForTemplate(XmlTemplate template)
-		{
-			foreach(XmlBuildOption xmlBuildOption in template.buildOptions)
-			{
-				switch(xmlBuildOption.type.ToLower())
-				{
-					case "string":
-					case "text":
-						yield return new BuildOption(xmlBuildOption);
-						break;
-
-					case "int":
-						yield return new IntBuildOption(xmlBuildOption);
-						break;
-
-					case "float":
-					case "double":
-						yield return new FloatBuildOption(xmlBuildOption);
-						break;
-
-					case "bool":
-					case "boolean":
-						yield return new BoolBuildOption(xmlBuildOption);
-						break;
 				}
 			}
 		}

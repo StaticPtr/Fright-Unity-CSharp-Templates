@@ -29,22 +29,6 @@ namespace Fright.Editor.Templates
 			}
 		}
 
-		public IEnumerable<XmlBase> serializableChildren
-		{
-			get
-			{
-				foreach(var @using in usings)
-				{
-					yield return @using;
-				}
-
-				foreach(var child in children)
-				{
-					yield return child;
-				}
-			}
-		}
-
 		public override string xmlType
 		{
 			get { return "template"; }
@@ -83,7 +67,13 @@ namespace Fright.Editor.Templates
 		/// Converts the XML object into C# and adds it to the string builder
 		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel)
 		{
-			ChildrenToCSharp(stringBuilder, indentationLevel, serializableChildren);
+			ChildrenToCSharp(stringBuilder, indentationLevel, null);
+		}
+
+		/// Converts the XML object into C# and adds it to the string builder
+		public virtual void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateBuilderSettings settings)
+		{
+			ChildrenToCSharp(stringBuilder, indentationLevel, GetSerializableChildren(settings));
 		}
 
 		/// Converts multiple XmlBase objects into C#
@@ -103,6 +93,22 @@ namespace Fright.Editor.Templates
 				}
 
 				child.ToCSharp(stringBuilder, indentationLevel);
+			}
+		}
+
+		public IEnumerable<XmlBase> GetSerializableChildren(TemplateBuilderSettings settings)
+		{
+			foreach(var @using in usings)
+			{
+				if (!@using.isOptional || settings == null || settings.IsOptionalUsingEnabled(@using.id))
+				{
+					yield return @using;
+				}
+			}
+
+			foreach(var child in children)
+			{
+				yield return child;
 			}
 		}
 

@@ -96,12 +96,7 @@ namespace Fright.Editor.Templates
 		{
 			this.template = template;
 			this.codePreview = null;
-			this.templateSettings.buildOptions.Clear();
-			
-			if (template != null)
-			{
-				this.templateSettings.buildOptions.AddRange(TemplateBuilder.ConstructBuildOptionsForTemplate(template));	
-			}
+			this.templateSettings.ChangeForNewTemplate(template);
 		}
 
 		private void CreateFileFromTemplate()
@@ -175,10 +170,10 @@ namespace Fright.Editor.Templates
 
 		private void DrawTemplateSettings()
 		{
+			//Settings
 			EditorGUILayout.Space();
 			EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 			{
-				//Template
 				EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
 				DrawTemplatePicker();
 				templateSettings.lineEndings = (TemplateBuilder.LineEndings)EditorGUILayout.EnumPopup("Line Endings", templateSettings.lineEndings);
@@ -186,10 +181,42 @@ namespace Fright.Editor.Templates
 			}
 			EditorGUILayout.EndVertical();
 
-			EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+			//Template Optional Values
+			if (templateSettings.buildOptions.Count > 0)
 			{
-				EditorGUILayout.LabelField("Template Values", EditorStyles.boldLabel);
-				DrawBuildOptions();
+				EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+				{
+					EditorGUILayout.LabelField("Template Values", EditorStyles.boldLabel);
+					DrawBuildOptions();
+				}
+				EditorGUILayout.EndVertical();
+			}
+
+			//Optional Usings
+			if (templateSettings.optionalUsings.Count > 0)
+			{
+				EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+				{
+					EditorGUILayout.LabelField("Namespaces", EditorStyles.boldLabel);
+					DrawOptionalUsings();
+				}
+				EditorGUILayout.EndVertical();
+			}
+
+			//Create button
+			EditorGUILayout.BeginVertical(GUILayout.ExpandHeight(true));
+			{
+				EditorGUILayout.GetControlRect(GUILayout.ExpandHeight(true));
+
+				GUI.enabled &= !string.IsNullOrEmpty(lastKnownCreationPath) && template != null;
+				{
+					if (GUILayout.Button("Create"))
+					{
+						CreateFileFromTemplate();
+					}
+				}
+				GUI.enabled = true;
+				EditorGUILayout.Space();
 			}
 			EditorGUILayout.EndVertical();
 		}
@@ -232,16 +259,6 @@ namespace Fright.Editor.Templates
 			EditorGUILayout.BeginHorizontal(EditorStyles.toolbar, GUILayout.ExpandHeight(true));
 			{
 				EditorGUILayout.LabelField(lastKnownCreationPath ?? "select a folder in the project view", EditorStyles.miniLabel);
-				EditorGUILayout.Space();
-
-				GUI.enabled = !string.IsNullOrEmpty(lastKnownCreationPath) && template != null;
-				{
-					if (GUILayout.Button("Create", EditorStyles.toolbarButton, GUILayout.Width(position.size.x - SETTINGS_PANEL_WIDTH - 10.0f)))
-					{
-						CreateFileFromTemplate();
-					}
-				}
-				GUI.enabled = true;
 			}
 			EditorGUILayout.EndHorizontal();
 		}
@@ -251,6 +268,14 @@ namespace Fright.Editor.Templates
 			foreach(var buildOption in templateSettings.buildOptions)
 			{
 				buildOption.DoLayout();
+			}
+		}
+
+		private void DrawOptionalUsings()
+		{
+			foreach(var optionalUsing in templateSettings.optionalUsings)
+			{
+				optionalUsing.isEnabled = EditorGUILayout.ToggleLeft(optionalUsing.id, optionalUsing.isEnabled);
 			}
 		}
 		#endregion
