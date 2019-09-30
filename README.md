@@ -19,3 +19,63 @@ The template builder window will automatically pick up any `.xtemplate` file in 
   <!-- BODY OF THE TEMPLATE -->
 </template>
 ```
+
+While it's possible to simply put plain text within the body of the template, and that plain text would show up in the final `.cs` file, `.xtemplate` files are designed to have their contents built using predefined tags such as `<function>`, `<class>`, etc... This gives the builder knowledge about the contents of the template and allows it to force coding convention.
+
+### Types - Interface and Enum
+These simple tags will create interfaces and enums respectively in the template.
+
+|Property|Is Optional|Default|Description|
+|---|---|---|---|
+|id|false|-|The name of the type|
+|base|true|-|The parent type of the new type|
+|comment|true|-|An XML comment for the type|
+|access|true|private|The accessibility of the type. Such as "public", "private", or "protected"|
+
+Interfaces can also have additional interfaces that they implement. These use the `<interface-contract>` tag to indicate that the type implements an interface.
+
+```XML
+<template id="Interface" version="1.0.0.0">
+  <interface id="ISomething" access="public">
+    <interface-contract id="System.IDisposable" />
+    <interface-contract id="System.IConvertable" />
+</template>
+```
+
+```C#
+public interface ISomething : System.IDisposable, System.IConvertable
+{
+}
+```
+
+### Types - Class and Struct
+Classes and Structures act in the same was as Interfaces and Enums, but have more options available.
+
+|Property|Is Optional|Default|Description|
+|---|---|---|---|
+|id|false|-|The name of the type|
+|base|true|-|The parent type of the new type|
+|access|true|private|The accessibility of the type. Such as "public", "private", or "protected"|
+|comment|true|-|An XML comment for the type|
+|isSealed|true|false|Is the type sealed|
+|isPartial|true|false|Is the type a partial type|
+|isStatic|true|false|Is the type static|
+|isAbstract|true|false|Is the type abstract|
+
+
+```XML
+<template id="Class" version="1.0.0.0">
+  <class id="MyClass" access="internal" base="ParentClass" comment="This is my class. Stay away!">
+    <!-- Interfaces -->
+    <interface-contract id="System.IDisposable" />
+    <!-- Class Body -->
+  </class>
+</template>
+```
+
+```C#
+/// This is my class. Stay away!
+internal class MyClass : ParentClass, System.IDisposable
+{
+}
+```
