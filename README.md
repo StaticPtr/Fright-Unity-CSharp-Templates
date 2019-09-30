@@ -12,7 +12,7 @@ The purpose of this tool is to make creation of new Unity scripts easier by prov
 5) Press "Create" to create that file in the folder you have selected
 
 ## Creating Your Own Templates
-The template builder window will automatically pick up any `.xtemplate` file in the project. `.xtemplate` files are XML files that have a specific structure that the builder window can understand. Every template must contain exactly one `template` tag which defines the name of the template, what `.xtemplate` version it is, and an optional sorting priority. The sorting priority is used to sort the templates in the template picker, in ascending order.
+The template builder window will automatically pick up any `.xtemplate` files in the project. `.xtemplate` files are XML files that have a specific structure that the builder window can understand. Every template must contain exactly one `template` tag which defines the name of the template, what `.xtemplate` version it is, and an optional sorting priority. The sorting priority is used to sort the templates in the template picker, in ascending order.
 
 ```XML
 <template id="NAME OF YOUR TEMPLATE AS SHOWN TO THE USER" version="1.0.0.0" priority="0">
@@ -20,7 +20,7 @@ The template builder window will automatically pick up any `.xtemplate` file in 
 </template>
 ```
 
-While it's possible to simply put plain text within the body of the template, and that plain text would show up in the final `.cs` file, `.xtemplate` files are designed to have their contents built using predefined tags such as `<function>`, `<class>`, etc... This gives the builder knowledge about the contents of the template and allows it to force coding convention.
+While it's possible to simply put plain text within the body of the template, and that plain text would show up in the final `.cs` file, `.xtemplate` files are designed to have their contents built using predefined tags such as `<function>`, `<class>`, etc... This gives the builder knowledge about the contents of the template and allows it to enforce coding convention.
 
 ### Types - Interface and Enum
 These simple tags will create interfaces and enums respectively in the template.
@@ -57,10 +57,10 @@ Classes and Structures act in the same was as Interfaces and Enums, but have mor
 |base|true|-|The parent type of the new type|
 |comment|true|-|An XML comment for the type|
 |access|true|private|The accessibility of the type. Such as "public", "private", or "protected"|
-|isSealed|true|false|Is the type sealed|
-|isPartial|true|false|Is the type a partial type|
-|isStatic|true|false|Is the type static|
-|isAbstract|true|false|Is the type abstract|
+|sealed|true|false|Is the type sealed|
+|partial|true|false|Is the type a partial type|
+|static|true|false|Is the type static|
+|abstract|true|false|Is the type abstract|
 
 
 ```XML
@@ -77,5 +77,76 @@ Classes and Structures act in the same was as Interfaces and Enums, but have mor
 /// This is my class. Stay away!
 internal class MyClass : ParentClass, System.IDisposable
 {
+}
+```
+
+### Type Bodies
+Just like how types have dedicated tags within the template, type fields and functions also have dedicated tags.
+
+#### Members
+|Property|Is Optional|Default|Description|
+|---|---|---|---|
+|id|false|-|The name of the member|
+|type|false|-|The type of the member|
+|default|true|-|An optional default value for the member|
+|access|true|private|The accessibility of the type. Such as "public", "private", or "protected"|
+|static|true|false|Is the member static|
+
+```XML
+<template id="Member" version="1.0.0.0">
+  <class id="MyClass">
+    <member id="x" type="int" default="5" />
+    <member id="y" type="float" access="public" />
+    <member id="z" type="string" access="public" default="five" />
+  </class>
+</template>
+```
+
+```C#
+private class MyClass
+{
+  private int x = 5;
+  public float y;
+  public string z = "five";
+}
+```
+
+#### Functions
+Functions use the `<function>` tag. You must declare the name and return type of the function using the `id` and `returnType` attributes. Then you can added one or more `<argument>` tags within the function to add arguments to the function signature. Finally you can add a body to the function by adding plaintext within the `<function>` tag. The body will automatically be indented.
+
+|Property|Is Optional|Default|Description|
+|---|---|---|---|
+|id|false|-|The name of the function|
+|comment|true|-|An XML comment for the function|
+|returnType|true|void|The return type of the function|
+|access|true|private|The accessibility of the type. Such as "public", "private", or "protected"|
+|virtuality|true|none|Options: none, virtual, abstract, override|
+|static|true|false|Is the function static|
+|sealed|true|false|Is the function sealed|
+
+|Property|Is Optional|Default|Description|
+|---|---|---|---|
+|id|false|-|The name of the argument|
+|type|false|-|The type of the argument|
+
+```XML
+<template id="Member" version="1.0.0.0">
+  <class id="MyClass">
+    <function id="Add" returnType="int" access="public">
+      <argument id="lhs" type="int" />
+      <argument id="rhs" type="int" />
+return lhs + rhs;
+    </function>
+  </class>
+</template>
+```
+
+```C#
+private class MyClass
+{
+  public int Add(int lhs, int rhs)
+  {
+    return lhs + rhs;
+  }
 }
 ```
