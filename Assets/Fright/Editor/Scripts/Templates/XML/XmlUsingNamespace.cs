@@ -23,7 +23,7 @@ namespace Fright.Editor.Templates
 		public override void ConstructFromXml(XmlNode node, XmlDocument document)
 		{
 			base.ConstructFromXml(node, document);
-			isOnByDefault = node.GetAttribute<bool>("onByDefault");
+			isOnByDefault = node.GetAttribute<bool>("default");
 			isOptional = node.GetAttribute<bool>("optional");
 		}
 
