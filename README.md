@@ -200,3 +200,31 @@ namespace Fright.Example
   }
 }
 ```
+
+## Build Options and Replacements
+You can define options that the user can tweak in the template builder that affect how the template is built. For example this can be used to change the name of a class, variable, namespace, etc. This is done using the `<build-option>` tag. The tag must have a name, type, and replacement.
+
+|Property|Is Optional|Default|Description|
+|---|---|---|---|
+|name|false|-|The name is shown to the user in the builder window|
+|replacement|false|-|Anywhere {REPLACEMENT} shows up in the template will be replaced with the value of the build option|
+|type|true|string|What type of build option is this. Options: int, float, string, bool|
+|default|true|-|The default value for the build option|
+
+The build option replacement "filename" is special. This build option will change the name of the generated `.cs` file to match the option. It can also be used within the replacement though as seen in the following example.
+
+```XML
+<template id="BuildOptions" version="1.0.0.0">
+  <build-option name="Class Name" replacement="filename" default="ClassName" />
+  
+  <class id="{filename}" />
+</template>
+```
+
+> Where "Class Name" equals "MyClass"
+
+```C#
+private class MyClass
+{
+}
+```
