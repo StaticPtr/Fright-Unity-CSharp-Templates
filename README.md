@@ -55,8 +55,8 @@ Classes and Structures act in the same was as Interfaces and Enums, but have mor
 |---|---|---|---|
 |id|false|-|The name of the type|
 |base|true|-|The parent type of the new type|
-|access|true|private|The accessibility of the type. Such as "public", "private", or "protected"|
 |comment|true|-|An XML comment for the type|
+|access|true|private|The accessibility of the type. Such as "public", "private", or "protected"|
 |isSealed|true|false|Is the type sealed|
 |isPartial|true|false|Is the type a partial type|
 |isStatic|true|false|Is the type static|
