@@ -260,14 +260,22 @@ namespace Fright.Editor.Templates
 					{
 						XmlTemplate _template = template;
 
-						//Add a separator
-						if (lastPriority != int.MinValue && _template.priority / 100 != lastPriority / 100)
+						//Check if the template is malformed
+						if (_template.isMalformed)
 						{
-							menu.AddSeparator(Path.GetDirectoryName(_template.id + ".t") + "/");
+							menu.AddDisabledItem(new GUIContent(template.id));
 						}
+						else
+						{
+							//Add a separator
+							if (lastPriority != int.MinValue && _template.priority / 100 != lastPriority / 100)
+							{
+								menu.AddSeparator(Path.GetDirectoryName(_template.id + ".t") + "/");
+							}
 
-						menu.AddItem(new GUIContent(template.id), false, () => SelectTemplate(_template));
-						lastPriority = _template.priority;
+							menu.AddItem(new GUIContent(template.id), false, () => SelectTemplate(_template));
+							lastPriority = _template.priority;
+						}
 					}
 
 					menu.ShowAsContext();

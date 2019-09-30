@@ -4,14 +4,18 @@ using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using Version = System.Version;
 
 namespace Fright.Editor.Templates
 {
 	/// Describes a template made from Xml that can be used to make a C# file
 	public class XmlTemplate : XmlBase
 	{
+		public static readonly Version MINIMUM_SUPPORTED_TEMPLATE_FORMAT = new Version("1.0.0.0");
+		public static readonly Version MAXIMUM_SUPPORTED_TEMPLATE_FORMAT = new Version("1.0.0.0");
 		private static Dictionary<string, System.Type> _xmlBaseTypes;
 
+		public bool isMalformed;
 		public int priority;
 		public System.Version version;
 		public List<XmlUsingNamespace> usings = new List<XmlUsingNamespace>();
@@ -43,26 +47,33 @@ namespace Fright.Editor.Templates
 			version = new System.Version(node.GetAttribute("version", "1.0"));
 			priority = node.GetAttribute<int>("priority", 0);
 
-			//Children
-			foreach(XmlNode child in node.ChildNodes)
+			if (IsTemplateFormatSupported(version))
 			{
-				XmlBase xmlBase = CreateXmlObjectFromNode(child, document);
-
-				if (xmlBase != null)
+				//Children
+				foreach(XmlNode child in node.ChildNodes)
 				{
-					if (xmlBase is XmlUsingNamespace)
+					XmlBase xmlBase = CreateXmlObjectFromNode(child, document);
+
+					if (xmlBase != null)
 					{
-						usings.Add(xmlBase as XmlUsingNamespace);
-					}
-					else if(xmlBase is XmlBuildOption)
-					{
-						buildOptions.Add(xmlBase as XmlBuildOption);
-					}
-					else
-					{
-						children.Add(xmlBase);
+						if (xmlBase is XmlUsingNamespace)
+						{
+							usings.Add(xmlBase as XmlUsingNamespace);
+						}
+						else if(xmlBase is XmlBuildOption)
+						{
+							buildOptions.Add(xmlBase as XmlBuildOption);
+						}
+						else
+						{
+							children.Add(xmlBase);
+						}
 					}
 				}
+			}
+			else
+			{
+				isMalformed = true;
 			}
 		}
 
@@ -194,6 +205,11 @@ namespace Fright.Editor.Templates
 			}
 
 			return result;
+		}
+
+		public static bool IsTemplateFormatSupported(Version version)
+		{
+			return version >= MINIMUM_SUPPORTED_TEMPLATE_FORMAT && version <= MAXIMUM_SUPPORTED_TEMPLATE_FORMAT;
 		}
 		#endregion
 	}

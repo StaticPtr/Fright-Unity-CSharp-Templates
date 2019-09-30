@@ -14,6 +14,8 @@ namespace Fright.Editor.Templates
 		public const string WINDOWS_LINE_ENDINGS = "\r\n";
 		public const string UNIX_LINE_ENDINGS = "\n";
 
+		public static readonly string TEMPLATE_BUILDER_VERSION = "0.0.2";
+
 		public static string BuildCodeFromTemplate(XmlTemplate template, TemplateSettings settings)
 		{
 			//Create the code
