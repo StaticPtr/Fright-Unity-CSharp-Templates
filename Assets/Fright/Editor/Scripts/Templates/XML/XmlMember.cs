@@ -43,7 +43,17 @@ namespace Fright.Editor.Templates
 			if (!string.IsNullOrEmpty(defaultValue))
 			{
 				stringBuilder.Append(" = ");
-				stringBuilder.Append(defaultValue);
+
+				if (type.Equals("string", System.StringComparison.InvariantCultureIgnoreCase))
+				{
+					stringBuilder.Append("\"");
+					stringBuilder.Append(defaultValue);	
+					stringBuilder.Append("\"");
+				}
+				else
+				{
+					stringBuilder.Append(defaultValue);
+				}
 			}
 
 			stringBuilder.Append(';');
