@@ -150,3 +150,53 @@ private class MyClass
   }
 }
 ```
+
+## Namespaces
+### Namespace Tag
+The `<namespace>` tag can be used to encapsulate one or more other tags within a namespace. The `<namespace>` tag only has one attribute, "id", which is the name of the namespace. All children inside of the namespace will be appropriately indented.
+
+```XML
+<template id="Namespaces" version="1.0.0.0">
+  <namespace id="Fright.Example">
+    <class id="MyClass" />
+  </namespace>
+</template>
+```
+```C#
+namespace Fright.Example
+{
+  private class MyClass
+  {
+  }
+}
+```
+
+### Using Namespaces
+Additionally to putting code within a namespace, you can also define which namespaces your file will use in the template. This is done with the `<using>` tag. Using namespaces can be marked as optional and the user will be able to enable/disable it in the template builder. Additionally the user will be able to add missing usings that they think they'll need.
+
+|Property|Is Optional|Default|Description|
+|---|---|---|---|
+|id|false|-|The namespace to add a _using_ for|
+|optional|true|false|Can this namespace be omitted|
+|default|true|true|Is the default state of this _using_ set to be used|
+
+```XML
+<template id="Usings" version="1.0.0.0">
+  <using id="System.Collections" />
+  <using id="System.Collections.Generic" />
+  <namespace id="Fright.Example">
+    <class id="MyClass" />
+  </namespace>
+</template>
+```
+```C#
+using System.Collections;
+using System.Collections.Generic;
+
+namespace Fright.Example
+{
+  private class MyClass
+  {
+  }
+}
+```
