@@ -1,4 +1,4 @@
-<template id="Enum" version="1.0.0.0" priority="-196">
+<template id="Enum" format="1.0.0.0" priority="-196">
 	<build-option name="Filename" type="string" replacement="filename" default="EnumName" />
 	<build-option name="Namespace" type="string" replacement="namespace" default="" />
 

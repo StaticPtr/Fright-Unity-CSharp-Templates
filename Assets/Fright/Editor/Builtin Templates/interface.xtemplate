@@ -1,4 +1,4 @@
-<template id="Interface" version="1.0.0.0" priority="-197">
+<template id="Interface" format="1.0.0.0" priority="-197">
 	<build-option name="Filename" type="string" replacement="filename" default="InterfaceName" />
 	<build-option name="Namespace" type="string" replacement="namespace" default="" />
 

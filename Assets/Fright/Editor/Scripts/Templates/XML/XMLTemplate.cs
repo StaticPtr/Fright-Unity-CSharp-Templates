@@ -39,7 +39,7 @@ namespace Fright.Editor.Templates
 
 		public bool isMalformed;
 		public int priority;
-		public System.Version version;
+		public System.Version templateFormat;
 		public List<XmlUsingNamespace> usings = new List<XmlUsingNamespace>();
 		public List<XmlBuildOption> buildOptions = new List<XmlBuildOption>();
 		public List<XmlBase> children = new List<XmlBase>();
@@ -66,10 +66,10 @@ namespace Fright.Editor.Templates
 			base.ConstructFromXml(node, document);
 
 			//One offs
-			version = new System.Version(node.GetAttribute("version", "1.0"));
+			templateFormat = new System.Version(node.GetAttribute("format", "1.0"));
 			priority = node.GetAttribute<int>("priority", 0);
 
-			if (IsTemplateFormatSupported(version))
+			if (IsTemplateFormatSupported(templateFormat))
 			{
 				//Children
 				foreach(XmlNode child in node.ChildNodes)
