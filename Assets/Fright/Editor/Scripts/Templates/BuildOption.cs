@@ -33,11 +33,18 @@ namespace Fright.Editor.Templates
 		public string id;
 		public string name;
 		public string textValue;
+		public bool isRequired;
+
+		public virtual bool isRequirementMet
+		{
+			get { return !string.IsNullOrEmpty(textValue); }
+		}
 
 		public BuildOption(XmlBuildOption xmlBuildOption)
 		{
 			id = xmlBuildOption.id;
 			name = xmlBuildOption.name;
+			isRequired = xmlBuildOption.isRequired;
 			SetTextValue(xmlBuildOption.@default);
 		}
 

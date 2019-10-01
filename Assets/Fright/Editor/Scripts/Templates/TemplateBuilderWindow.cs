@@ -75,6 +75,31 @@ namespace Fright.Editor.Templates
 			}
 		}
 
+		public bool canCreateTemplate
+		{
+			get
+			{
+				bool result = true;
+				
+				result &= !string.IsNullOrEmpty(lastKnownCreationPath);
+				result &= template != null;
+				result &= templateSettings != null;
+
+				//Check if all of the build options' requirements have been met
+				if (result && templateSettings.buildOptions.Count > 0)
+				{
+					for(int i = 0; i < templateSettings.buildOptions.Count && result; ++i)
+					{
+						BuildOption buildOption = templateSettings.buildOptions[i];
+						result &= !buildOption.isRequired || buildOption.isRequirementMet;	
+					}
+				}
+
+				//Return the result
+				return result;
+			}
+		}
+
 		/// Checks if the template builder window can be opened
 		[MenuItem("Assets/Template Window", true)]
 		public static bool CanOpenTemplateBuilder()
@@ -260,26 +285,27 @@ namespace Fright.Editor.Templates
 			}
 			EditorGUILayout.EndVertical();
 
-			//Call to actions
+			//Close button
+			if (GUILayout.Button("Reset to defaults"))
+			{
+				SelectTemplate(template, wipeSettings: true);
+			}
+
+			//Bottom buttons
 			EditorGUILayout.BeginVertical(GUILayout.ExpandHeight(true));
 			{
 				EditorGUILayout.GetControlRect(GUILayout.ExpandHeight(true));
 
-				//Close button
-				if (GUILayout.Button("Close"))
-				{
-					SelectTemplate(template, wipeSettings: true);
-				}
-
 				//Create button
-				GUI.enabled &= !string.IsNullOrEmpty(lastKnownCreationPath) && template != null;
+				bool wasGUIEnabled = GUI.enabled;
+				GUI.enabled &= canCreateTemplate;
 				{
 					if (GUILayout.Button("Create"))
 					{
 						CreateFileFromTemplate();
 					}
 				}
-				GUI.enabled = true;
+				GUI.enabled = wasGUIEnabled;
 				EditorGUILayout.Space();
 			}
 			EditorGUILayout.EndVertical();
@@ -327,11 +353,7 @@ namespace Fright.Editor.Templates
 		private void DrawTemplatePreview()
 		{
 			templatePreviewScrollPos = EditorGUILayout.BeginScrollView(templatePreviewScrollPos);
-			GUI.enabled = true;
-			{
-				EditorGUILayout.LabelField(GUIContent.none, new GUIContent(codePreview ?? string.Empty), codePreviewStyle, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
-			}
-			GUI.enabled = true;
+			EditorGUILayout.LabelField(GUIContent.none, new GUIContent(codePreview ?? string.Empty), codePreviewStyle, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 			EditorGUILayout.EndScrollView();
 		}
 

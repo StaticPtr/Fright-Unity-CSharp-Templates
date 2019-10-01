@@ -34,6 +34,7 @@ namespace Fright.Editor.Templates
 		public string name;
 		public string type;
 		public string @default;
+		public bool isRequired;
 
 		public override string xmlType
 		{
@@ -59,6 +60,7 @@ namespace Fright.Editor.Templates
 			type = node.GetAttribute("type", "string");
 			id = node.GetAttribute("replacement", name.ToLower());
 			@default = node.GetAttribute("default");
+			isRequired = node.GetAttribute<bool>("required", true);
 		}
 	}
 }
