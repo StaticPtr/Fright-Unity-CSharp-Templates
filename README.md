@@ -210,6 +210,7 @@ You can define options that the user can tweak in the template builder that affe
 |replacement|false|-|Anywhere {REPLACEMENT} shows up in the template will be replaced with the value of the build option|
 |type|true|string|What type of build option is this. Options: int, float, string, bool|
 |default|true|-|The default value for the build option|
+|required|true|true|If set to true, the template cannot be built if the option's value is null or empty|
 
 The build option replacement "filename" is special. This build option will change the name of the generated `.cs` file to match the option. It can also be used within the replacement though as seen in the following example.
 
