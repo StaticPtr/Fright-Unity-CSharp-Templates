@@ -36,19 +36,6 @@ namespace Fright.Editor.Templates
 			get { return "namespace"; }
 		}
 
-		public string GetModifiedID(TemplateSettings settings)
-		{
-			string result = id;
-
-			if (settings != null)
-			{
-				result = settings.ApplyReplacementsToText(result);
-			}
-
-			//Return the result
-			return result;
-		}
-
 		public override void ConstructFromXml(XmlNode node, XmlDocument document)
 		{		
 			base.ConstructFromXml(node, document);
@@ -63,6 +50,11 @@ namespace Fright.Editor.Templates
 					children.Add(xmlBase);
 				}
 			}
+		}
+
+		public override bool ShouldUse(TemplateSettings settings)
+		{
+			return true;
 		}
 
 		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings settings)

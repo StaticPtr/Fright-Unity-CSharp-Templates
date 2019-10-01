@@ -40,9 +40,12 @@ namespace Fright.Editor.Templates
 
 		public string ApplyReplacementsToText(string text)
 		{
-			foreach(var buildOption in buildOptions)
+			if (text != null)
 			{
-				text = text.Replace("{" + buildOption.id + "}", buildOption.textValue);
+				foreach(var buildOption in buildOptions)
+				{
+					text = text.Replace("{" + buildOption.id + "}", buildOption.textValue);
+				}
 			}
 
 			return text;

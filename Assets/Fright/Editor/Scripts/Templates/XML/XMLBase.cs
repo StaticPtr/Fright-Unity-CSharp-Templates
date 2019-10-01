@@ -35,12 +35,6 @@ namespace Fright.Editor.Templates
 		/// The XML tag that this object comes from
 		public abstract string xmlType { get; }
 
-		/// Should this XmlBase be used
-		public virtual bool shouldUse
-		{
-			get { return true; }
-		}
-
 		/// Should an extra new-line be added before this object if there is another object
 		public virtual bool shouldAddLeadingNewline
 		{
@@ -50,10 +44,30 @@ namespace Fright.Editor.Templates
 		/// Converts the XML object into C# and adds it to the string builder
 		public abstract void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings settings);
 
+		/// Should this XmlBase be used (and converted to C#)
+		public virtual bool ShouldUse(TemplateSettings settings)
+		{
+			return !string.IsNullOrEmpty(GetModifiedID(settings));
+		}
+
 		/// Constructs the object from an Xml node and document
 		public virtual void ConstructFromXml(XmlNode node, XmlDocument document)
 		{
 			id = node.GetAttribute("id");
+		}
+
+		/// Applies any text replacements to the ID of this object and returns the result
+		public virtual string GetModifiedID(TemplateSettings settings)
+		{
+			string result = id;
+
+			if (settings != null)
+			{
+				result = settings.ApplyReplacementsToText(result);
+			}
+
+			//Return the result
+			return result;
 		}
 	}
 }

@@ -36,6 +36,11 @@ namespace Fright.Editor.Templates
 			get { return "codeblock"; }
 		}
 
+		public override bool ShouldUse(TemplateSettings settings)
+		{
+			return true;
+		}
+
 		public override void ConstructFromXml(XmlNode node, XmlDocument document)
 		{
 			base.ConstructFromXml(node, document);

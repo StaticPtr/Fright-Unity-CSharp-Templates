@@ -112,16 +112,19 @@ namespace Fright.Editor.Templates
 
 			foreach (XmlBase child in children)
 			{
-				if (isFirstChild)
+				if (child.ShouldUse(settings))
 				{
-					isFirstChild = false;
-				}
-				else
-				{
-					stringBuilder.Append(child.shouldAddLeadingNewline ? "\n\n" : "\n");
-				}
+					if (isFirstChild)
+					{
+						isFirstChild = false;
+					}
+					else
+					{
+						stringBuilder.Append(child.shouldAddLeadingNewline ? "\n\n" : "\n");
+					}
 
-				child.ToCSharp(stringBuilder, indentationLevel, settings);
+					child.ToCSharp(stringBuilder, indentationLevel, settings);
+				}
 			}
 		}
 
@@ -154,7 +157,7 @@ namespace Fright.Editor.Templates
 			//Other children
 			foreach(var child in children)
 			{
-				if (child.shouldUse)
+				if (child.ShouldUse(settings))
 				{
 					yield return child;
 				}
