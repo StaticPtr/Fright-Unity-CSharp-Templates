@@ -12,10 +12,10 @@ The purpose of this tool is to make creation of new Unity scripts easier by prov
 5) Press "Create" to create that file in the folder you have selected
 
 ## Creating Your Own Templates
-The template builder window will automatically pick up any `.xtemplate` files in the project. `.xtemplate` files are XML files that have a specific structure that the builder window can understand. Every template must contain exactly one `template` tag which defines the name of the template, what `.xtemplate` version it is, and an optional sorting priority. The sorting priority is used to sort the templates in the template picker, in ascending order.
+The template builder window will automatically pick up any `.xtemplate` files in the project. `.xtemplate` files are XML files that have a specific structure that the builder window can understand. Every template must contain exactly one `template` tag which defines the name of the template, what `.xtemplate` format it is, and an optional sorting priority. The sorting priority is used to sort the templates in the template picker, in ascending order.
 
 ```XML
-<template id="NAME OF YOUR TEMPLATE AS SHOWN TO THE USER" version="1.0.0.0" priority="0">
+<template id="NAME OF YOUR TEMPLATE AS SHOWN TO THE USER" format="1.0.0.0" priority="0">
   <!-- BODY OF THE TEMPLATE -->
 </template>
 ```
@@ -35,7 +35,7 @@ These simple tags will create interfaces and enums respectively in the template.
 Interfaces can also have additional interfaces that they implement. These use the `<interface-contract>` tag to indicate that the type implements an interface.
 
 ```XML
-<template id="Interface" version="1.0.0.0">
+<template id="Interface" format="1.0.0.0">
   <interface id="ISomething" access="public">
     <interface-contract id="System.IDisposable" />
     <interface-contract id="System.IConvertable" />
@@ -64,7 +64,7 @@ Classes and Structures act in the same was as Interfaces and Enums, but have mor
 
 
 ```XML
-<template id="Class" version="1.0.0.0">
+<template id="Class" format="1.0.0.0">
   <class id="MyClass" access="internal" base="ParentClass" comment="This is my class. Stay away!">
     <!-- Interfaces -->
     <interface-contract id="System.IDisposable" />
@@ -93,7 +93,7 @@ Just like how types have dedicated tags within the template, type fields and fun
 |static|true|false|Is the member static|
 
 ```XML
-<template id="Member" version="1.0.0.0">
+<template id="Member" format="1.0.0.0">
   <class id="MyClass">
     <member id="x" type="int" default="5" />
     <member id="y" type="float" access="public" />
@@ -130,7 +130,7 @@ Functions use the `<function>` tag. You must declare the name and return type of
 |type|false|-|The type of the argument|
 
 ```XML
-<template id="Member" version="1.0.0.0">
+<template id="Member" format="1.0.0.0">
   <class id="MyClass">
     <function id="Add" returnType="int" access="public">
       <argument id="lhs" type="int" />
@@ -156,7 +156,7 @@ private class MyClass
 The `<namespace>` tag can be used to encapsulate one or more other tags within a namespace. The `<namespace>` tag only has one attribute, "id", which is the name of the namespace. All children inside of the namespace will be appropriately indented.
 
 ```XML
-<template id="Namespaces" version="1.0.0.0">
+<template id="Namespaces" format="1.0.0.0">
   <namespace id="Fright.Example">
     <class id="MyClass" />
   </namespace>
@@ -181,7 +181,7 @@ Additionally to putting code within a namespace, you can also define which names
 |default|true|true|Is the default state of this _using_ set to be used|
 
 ```XML
-<template id="Usings" version="1.0.0.0">
+<template id="Usings" format="1.0.0.0">
   <using id="System.Collections" />
   <using id="System.Collections.Generic" />
   <namespace id="Fright.Example">
@@ -214,7 +214,7 @@ You can define options that the user can tweak in the template builder that affe
 The build option replacement "filename" is special. This build option will change the name of the generated `.cs` file to match the option. It can also be used within the replacement though as seen in the following example.
 
 ```XML
-<template id="BuildOptions" version="1.0.0.0">
+<template id="BuildOptions" format="1.0.0.0">
   <build-option name="Class Name" replacement="filename" default="ClassName" />
   
   <class id="{filename}" />
