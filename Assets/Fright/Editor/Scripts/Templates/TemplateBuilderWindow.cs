@@ -117,11 +117,16 @@ namespace Fright.Editor.Templates
 			}
 		}
 
-		private void SelectTemplate(XmlTemplate template)
+		private void SelectTemplate(XmlTemplate template, bool wipeSettings = false)
 		{
 			this.template = template;
 			this.codePreview = null;
-			this.templateSettings.ChangeForNewTemplate(template);
+			this.templateSettings = new TemplateSettings(template);
+
+			if (!wipeSettings)
+			{
+				this.templateSettings.RestorePeristentSettings(template);
+			}
 		}
 
 		private void CreateFileFromTemplate()
@@ -196,6 +201,12 @@ namespace Fright.Editor.Templates
 			if (EditorGUI.EndChangeCheck())
 			{
 				codePreview = null;
+
+				//Apply any peristent template settings
+				if (template != null && templateSettings != null)
+				{
+					templateSettings.SavePersistentSettings(template);
+				}
 			}
 		}
 
@@ -249,11 +260,18 @@ namespace Fright.Editor.Templates
 			}
 			EditorGUILayout.EndVertical();
 
-			//Create button
+			//Call to actions
 			EditorGUILayout.BeginVertical(GUILayout.ExpandHeight(true));
 			{
 				EditorGUILayout.GetControlRect(GUILayout.ExpandHeight(true));
 
+				//Close button
+				if (GUILayout.Button("Close"))
+				{
+					SelectTemplate(template, wipeSettings: true);
+				}
+
+				//Create button
 				GUI.enabled &= !string.IsNullOrEmpty(lastKnownCreationPath) && template != null;
 				{
 					if (GUILayout.Button("Create"))

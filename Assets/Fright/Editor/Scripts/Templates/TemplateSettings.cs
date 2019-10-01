@@ -20,29 +20,23 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 namespace Fright.Editor.Templates
 {
 	public class TemplateSettings
 	{
+		private const string PERSISTENT_SETTING_LINE_ENDINGS = "lineendings";
+		private const string PERSISTENT_SETTING_BUILD_OPTIONS = "buildoptions";
+		private const string PERSISTENT_SETTING_OPTIONAL_USINGS = "optionusings";
+
 		public TemplateBuilder.LineEndings lineEndings = TemplateBuilder.LineEndings.unix;
 		public List<BuildOption> buildOptions = new List<BuildOption>();
 		public List<OptionalUsing> optionalUsings = new List<OptionalUsing>();
-
-		public void ChangeForNewTemplate(XmlTemplate template)
-		{
-			buildOptions = new List<BuildOption>();
-			optionalUsings = new List<OptionalUsing>();
-
-			if (template != null)
-			{
-				buildOptions.AddRange(ConstructBuildOptionsForTemplate(template));
-				optionalUsings.AddRange(ConstructOptionalUsingsForTemplate(template));
-			}
-		}
 
 		public string ApplyReplacementsToText(string text)
 		{
@@ -94,6 +88,79 @@ namespace Fright.Editor.Templates
 			return result;
 		}
 
+		/// Saves any persistent settings for the provided template
+		public void SavePersistentSettings(XmlTemplate template)
+		{
+			EditorPrefs.SetInt(GetPersistentSettingKey(PERSISTENT_SETTING_LINE_ENDINGS, template), (int)lineEndings);
+			EditorPrefs.SetString(GetPersistentSettingKey(PERSISTENT_SETTING_BUILD_OPTIONS, template), buildOptions != null ? JsonUtility.ToJson(new BuildOptionCollection(buildOptions), false) : null);
+			EditorPrefs.SetString(GetPersistentSettingKey(PERSISTENT_SETTING_OPTIONAL_USINGS, template), optionalUsings != null ? JsonUtility.ToJson(new OptionalUsingCollection(optionalUsings), false) : null);
+		}
+
+		/// Recovers any persistent settings from the provided template
+		public void RestorePeristentSettings(XmlTemplate template)
+		{
+			lineEndings = (TemplateBuilder.LineEndings)EditorPrefs.GetInt(GetPersistentSettingKey(PERSISTENT_SETTING_LINE_ENDINGS, template), (int)TemplateBuilder.LineEndings.unix);
+
+			//Build options
+			string buildOptionsString = EditorPrefs.GetString(GetPersistentSettingKey(PERSISTENT_SETTING_BUILD_OPTIONS, template));
+
+			if (!string.IsNullOrEmpty(buildOptionsString))
+			{
+				try
+				{
+					BuildOptionCollection collection = JsonUtility.FromJson<BuildOptionCollection>(buildOptionsString);
+					MergeInPersistentBuildOptions(collection);
+				}
+				catch {}
+			}
+
+			//Optional Usings
+			string optionalUsingsString = EditorPrefs.GetString(GetPersistentSettingKey(PERSISTENT_SETTING_OPTIONAL_USINGS, template));
+
+			if (!string.IsNullOrEmpty(optionalUsingsString))
+			{
+				try
+				{
+					OptionalUsingCollection collection = JsonUtility.FromJson<OptionalUsingCollection>(optionalUsingsString);
+					MergeInPersistentOptionalUsings(collection);
+				}
+				catch {}
+			}
+		}
+
+		private void MergeInPersistentBuildOptions(BuildOptionCollection collection)
+		{
+			foreach(BuildOption savedOption in collection.buildOptions)
+			{
+				if (savedOption.textValue != null)
+				{
+					BuildOption existingOption = this.buildOptions.FirstOrDefault(_opt => _opt.id == savedOption.id);
+
+					if (existingOption != null)
+					{
+						existingOption.SetTextValue(savedOption.textValue);
+					}
+				}
+			}
+		}
+
+		private void MergeInPersistentOptionalUsings(OptionalUsingCollection collection)
+		{
+			foreach(OptionalUsing savedOption in collection.optionalUsings)
+			{
+				OptionalUsing existingOption = this.optionalUsings.FirstOrDefault(_opt => _opt.id == savedOption.id);
+
+				if (existingOption != null)
+				{
+					existingOption.isEnabled = savedOption.isEnabled;
+				}
+				else if (savedOption.isCustom)
+				{
+					this.optionalUsings.Add(savedOption);
+				}
+			}
+		}
+
 		#region Constructor
 		public TemplateSettings()
 		{
@@ -102,7 +169,14 @@ namespace Fright.Editor.Templates
 
 		public TemplateSettings(XmlTemplate template)
 		{
-			ChangeForNewTemplate(template);
+			buildOptions = new List<BuildOption>();
+			optionalUsings = new List<OptionalUsing>();
+
+			if (template != null)
+			{
+				buildOptions.AddRange(ConstructBuildOptionsForTemplate(template));
+				optionalUsings.AddRange(ConstructOptionalUsingsForTemplate(template));
+			}
 		}
 		#endregion
 
@@ -150,14 +224,44 @@ namespace Fright.Editor.Templates
 				}
 			}
 		}
+
+		public static string GetPersistentSettingKey(string settingID, XmlTemplate template)
+		{
+			return string.Format("com.fright.templatebuilder.{0}.{1}", template.id, settingID);
+		}
 		#endregion
 
 		#region Embedded Types
+		[System.Serializable]
 		public class OptionalUsing
 		{
 			public string id;
 			public bool isEnabled;
 			public bool isCustom;
+		}
+
+		/// This type is necessary because the Unity JsonUtility can't serialize collections directly
+		[System.Serializable]
+		private class BuildOptionCollection
+		{
+			public List<BuildOption> buildOptions;
+
+			public BuildOptionCollection(IEnumerable<BuildOption> buildOptions)
+			{
+				this.buildOptions = new List<BuildOption>(buildOptions);
+			}
+		}
+
+		/// This type is necessary because the Unity JsonUtility can't serialize collections directly
+		[System.Serializable]
+		private class OptionalUsingCollection
+		{
+			public List<OptionalUsing> optionalUsings;
+
+			public OptionalUsingCollection(IEnumerable<OptionalUsing> optionalUsings)
+			{
+				this.optionalUsings = new List<OptionalUsing>(optionalUsings);
+			}
 		}
 		#endregion
 	}

@@ -27,6 +27,7 @@ using UnityEditor;
 
 namespace Fright.Editor.Templates
 {
+	[System.Serializable]
 	public class BuildOption
 	{
 		public string id;
@@ -37,12 +38,17 @@ namespace Fright.Editor.Templates
 		{
 			id = xmlBuildOption.id;
 			name = xmlBuildOption.name;
-			textValue = xmlBuildOption.@default;
+			SetTextValue(xmlBuildOption.@default);
 		}
 
 		public virtual void DoLayout()
 		{
 			textValue = EditorGUILayout.TextField(name, textValue);
+		}
+
+		public virtual void SetTextValue(string textValue)
+		{
+			this.textValue = textValue;
 		}
 	}
 
@@ -52,7 +58,7 @@ namespace Fright.Editor.Templates
 
 		public IntBuildOption(XmlBuildOption xmlBuildOption) : base(xmlBuildOption)
 		{
-			int.TryParse(textValue, out intValue);
+			//...
 		}
 
 		public override void DoLayout()
@@ -66,6 +72,11 @@ namespace Fright.Editor.Templates
 				textValue = intValue.ToString();
 			}
 		}
+
+		public override void SetTextValue(string textValue)
+		{
+			int.TryParse(textValue, out intValue);
+		}
 	}
 
 	public class FloatBuildOption : BuildOption
@@ -74,7 +85,7 @@ namespace Fright.Editor.Templates
 
 		public FloatBuildOption(XmlBuildOption xmlBuildOption) : base(xmlBuildOption)
 		{
-			float.TryParse(textValue, out floatValue);
+			//...
 		}
 
 		public override void DoLayout()
@@ -88,6 +99,11 @@ namespace Fright.Editor.Templates
 				textValue = floatValue.ToString();
 			}
 		}
+
+		public override void SetTextValue(string textValue)
+		{
+			float.TryParse(textValue, out floatValue);
+		}
 	}
 
 	public class BoolBuildOption : BuildOption
@@ -96,7 +112,7 @@ namespace Fright.Editor.Templates
 
 		public BoolBuildOption(XmlBuildOption xmlBuildOption) : base(xmlBuildOption)
 		{
-			bool.TryParse(textValue, out boolValue);
+			//...
 		}
 
 		public override void DoLayout()
@@ -109,6 +125,11 @@ namespace Fright.Editor.Templates
 			{
 				textValue = boolValue.ToString();
 			}
+		}
+
+		public override void SetTextValue(string textValue)
+		{
+			bool.TryParse(textValue, out boolValue);
 		}
 	}
 }
