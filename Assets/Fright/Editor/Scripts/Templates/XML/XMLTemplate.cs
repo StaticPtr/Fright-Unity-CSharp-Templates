@@ -71,6 +71,8 @@ namespace Fright.Editor.Templates
 
 			if (IsTemplateFormatSupported(templateFormat))
 			{
+				bool hasAddedUsingPlaceholder = false;
+
 				//Children
 				foreach(XmlNode child in node.ChildNodes)
 				{
@@ -81,6 +83,12 @@ namespace Fright.Editor.Templates
 						if (xmlBase is XmlUsingNamespace)
 						{
 							usings.Add(xmlBase as XmlUsingNamespace);
+
+							if (!hasAddedUsingPlaceholder)
+							{
+								children.Add(new XmlUsingNamespacePlaceholder());
+								hasAddedUsingPlaceholder = true;
+							}
 						}
 						else if(xmlBase is XmlBuildOption)
 						{
@@ -130,6 +138,30 @@ namespace Fright.Editor.Templates
 
 		public IEnumerable<XmlBase> GetSerializableChildren(TemplateSettings settings)
 		{
+			//Other children
+			foreach(var child in children)
+			{
+				//The usings are not included in the children list, therefor a placeholder is used to determine where to inject them
+				if (child is XmlUsingNamespacePlaceholder)
+				{
+					foreach(var @using in GetUsingNamespaceChildren(settings))
+					{
+						yield return @using;
+					}
+
+					continue;
+				}
+
+				//Regular child
+				if (child.ShouldUse(settings))
+				{
+					yield return child;
+				}
+			}
+		}
+
+		private IEnumerable<XmlBase> GetUsingNamespaceChildren(TemplateSettings settings)
+		{
 			//Template usings
 			foreach(var @using in usings)
 			{
@@ -151,15 +183,6 @@ namespace Fright.Editor.Templates
 							id = @using.id,
 						};
 					}
-				}
-			}
-
-			//Other children
-			foreach(var child in children)
-			{
-				if (child.ShouldUse(settings))
-				{
-					yield return child;
 				}
 			}
 		}
@@ -196,21 +219,25 @@ namespace Fright.Editor.Templates
 			//Find all the XmlBase types in any of the assemblies
 			foreach(Assembly assembly in System.AppDomain.CurrentDomain.GetAssemblies())
 			{
-				foreach(System.Type type in assembly.GetExportedTypes())
+				try
 				{
-					if (!type.IsAbstract && !type.IsGenericType && typeof(XmlBase).IsAssignableFrom(type))
+					foreach(System.Type type in assembly.GetExportedTypes())
 					{
-						try
+						if (!type.IsAbstract && !type.IsGenericType && typeof(XmlBase).IsAssignableFrom(type))
 						{
-							XmlBase obj = System.Activator.CreateInstance(type) as XmlBase;
-							xmlBaseTypes[obj.xmlType.ToLower()] = type;
-						}
-						catch (System.Exception e)
-						{
-							UnityEngine.Debug.LogException(e);
+							try
+							{
+								XmlBase obj = System.Activator.CreateInstance(type) as XmlBase;
+								xmlBaseTypes[obj.xmlType.ToLower()] = type;
+							}
+							catch (System.Exception e)
+							{
+								UnityEngine.Debug.LogException(e);
+							}
 						}
 					}
 				}
+				catch {}
 			}
 		}
 

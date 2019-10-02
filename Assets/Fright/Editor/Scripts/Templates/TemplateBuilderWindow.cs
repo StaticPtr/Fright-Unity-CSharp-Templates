@@ -100,6 +100,12 @@ namespace Fright.Editor.Templates
 			}
 		}
 
+		private static string lastSelectedTemplateID
+		{
+			get { return EditorPrefs.GetString("com.fright.templatebuilder.lastSelectedTemplateID"); }
+			set { EditorPrefs.SetString("com.fright.templatebuilder.lastSelectedTemplateID", value); }
+		}
+
 		/// Checks if the template builder window can be opened
 		[MenuItem("Assets/Template Window", true)]
 		public static bool CanOpenTemplateBuilder()
@@ -116,6 +122,43 @@ namespace Fright.Editor.Templates
 
 			window.position = window.sharedWindowPosition;
 			window.ShowUtility();
+		}
+
+		public bool SelectTemplate(string templateID, bool wipeSettings = false)
+		{
+			bool didFind = false;
+
+			if (templates != null)
+			{
+				//Iterate over each template and find the one with the matching ID
+				for(int i = 0; i < templates.Count; ++i)
+				{
+					XmlTemplate template = templates[i];
+
+					if (template.id.Equals(templateID, System.StringComparison.InvariantCultureIgnoreCase))
+					{
+						SelectTemplate(template, wipeSettings);
+						didFind = true;
+						break;
+					}
+				}
+			}
+
+			//Return the result
+			return didFind;
+		}
+
+		public void SelectTemplate(XmlTemplate template, bool wipeSettings = false)
+		{
+			this.template = template;
+			this.codePreview = null;
+			this.templateSettings = new TemplateSettings(template);
+			lastSelectedTemplateID = template.id;
+
+			if (!wipeSettings)
+			{
+				this.templateSettings.RestorePeristentSettings(template);
+			}
 		}
 
 		private void ApplyMinimumsToWindow()
@@ -137,20 +180,11 @@ namespace Fright.Editor.Templates
 
 				if (templates.Count > 0)
 				{
-					SelectTemplate(templates[0]);
+					if (!SelectTemplate(lastSelectedTemplateID))
+					{
+						SelectTemplate(templates[0]);
+					}
 				}
-			}
-		}
-
-		private void SelectTemplate(XmlTemplate template, bool wipeSettings = false)
-		{
-			this.template = template;
-			this.codePreview = null;
-			this.templateSettings = new TemplateSettings(template);
-
-			if (!wipeSettings)
-			{
-				this.templateSettings.RestorePeristentSettings(template);
 			}
 		}
 
@@ -198,6 +232,9 @@ namespace Fright.Editor.Templates
 			{
 				codePreviewStyle = new GUIStyle("box");
 				codePreviewStyle.alignment = TextAnchor.UpperLeft;
+				codePreviewStyle.normal.textColor = EditorStyles.label.normal.textColor;
+				codePreviewStyle.active.textColor = EditorStyles.label.active.textColor;
+				codePreviewStyle.focused.textColor = EditorStyles.label.focused.textColor;
 			}
 
 			//Drawing

@@ -56,4 +56,22 @@ namespace Fright.Editor.Templates
 			stringBuilder.Append(";");
 		}
 	}
+
+	internal class XmlUsingNamespacePlaceholder : XmlBase
+	{
+		public override string xmlType
+		{
+			get { return "using-placeholder"; }
+		}
+
+		public override void ConstructFromXml(XmlNode node, XmlDocument document)
+		{
+			throw new System.NotSupportedException();
+		}
+
+		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings settings)
+		{
+			throw new System.NotSupportedException();
+		}
+	}
 }
