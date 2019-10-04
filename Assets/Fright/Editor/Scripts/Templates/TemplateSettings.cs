@@ -20,6 +20,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
@@ -38,13 +39,16 @@ namespace Fright.Editor.Templates
 		public List<BuildOption> buildOptions = new List<BuildOption>();
 		public List<OptionalUsing> optionalUsings = new List<OptionalUsing>();
 
+		/// Allows other systems to apply replacements to the template's text. The input is the template (or ID), and the output is the new text.
+		public Func<string, string> onApplyReplacements;
+
 		public string ApplyReplacementsToText(string text)
 		{
-			if (text != null)
+			if (text != null && onApplyReplacements != null)
 			{
-				foreach(var buildOption in buildOptions)
+				foreach(var method in onApplyReplacements.GetInvocationList())
 				{
-					text = text.Replace("{" + buildOption.id + "}", buildOption.textValue);
+					text = (string)method.DynamicInvoke(text);
 				}
 			}
 
@@ -131,6 +135,31 @@ namespace Fright.Editor.Templates
 			}
 		}
 
+		private string ApplyBuildOptionsAsReplacements(string text)
+		{
+			foreach(var buildOption in buildOptions)
+			{
+				text = text.Replace("{" + buildOption.id + "}", buildOption.textValue);
+			}
+
+			return text;
+		}
+
+		private string ApplyRandomsAsReplacements(string text)
+		{
+			const string replacement = "{System.Guid}";
+			int replacementLength = replacement.Length;
+			int index = text.IndexOf(replacement);
+
+			while(index >= 0)
+			{
+				text = text.Substring(0, index) + Guid.NewGuid().ToString() + text.Substring(index + replacementLength);
+				index = text.IndexOf(replacement);
+			}
+
+			return text;
+		}
+
 		private void MergeInPersistentBuildOptions(BuildOptionCollection collection)
 		{
 			foreach(BuildOption savedOption in collection.buildOptions)
@@ -167,10 +196,11 @@ namespace Fright.Editor.Templates
 		#region Constructor
 		public TemplateSettings()
 		{
-			//...
+			onApplyReplacements += ApplyBuildOptionsAsReplacements;
+			onApplyReplacements += ApplyRandomsAsReplacements;
 		}
 
-		public TemplateSettings(XmlTemplate template)
+		public TemplateSettings(XmlTemplate template) : this()
 		{
 			buildOptions = new List<BuildOption>();
 			optionalUsings = new List<OptionalUsing>();
