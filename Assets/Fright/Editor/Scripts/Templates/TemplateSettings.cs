@@ -31,7 +31,10 @@ namespace Fright.Editor.Templates
 {
 	public class TemplateSettings
 	{
+		//Global Settings
 		private const string PERSISTENT_SETTING_LINE_ENDINGS = "lineendings";
+
+		//Per-Template Settings
 		private const string PERSISTENT_SETTING_BUILD_OPTIONS = "buildoptions";
 		private const string PERSISTENT_SETTING_OPTIONAL_USINGS = "optionusings";
 
@@ -98,16 +101,20 @@ namespace Fright.Editor.Templates
 		/// Saves any persistent settings for the provided template
 		public void SavePersistentSettings(XmlTemplate template)
 		{
-			EditorPrefs.SetInt(GetPersistentSettingKey(PERSISTENT_SETTING_LINE_ENDINGS, template), (int)lineEndings);
+			EditorPrefs.SetInt(GetPersistentSettingKey(PERSISTENT_SETTING_LINE_ENDINGS), (int)lineEndings);
 			EditorPrefs.SetString(GetPersistentSettingKey(PERSISTENT_SETTING_BUILD_OPTIONS, template), buildOptions != null ? JsonUtility.ToJson(new BuildOptionCollection(buildOptions), false) : null);
 			EditorPrefs.SetString(GetPersistentSettingKey(PERSISTENT_SETTING_OPTIONAL_USINGS, template), optionalUsings != null ? JsonUtility.ToJson(new OptionalUsingCollection(optionalUsings), false) : null);
 		}
 
 		/// Recovers any persistent settings from the provided template
-		public void RestorePeristentSettings(XmlTemplate template)
+		public void RestorePeristentSettings()
 		{
-			lineEndings = (TemplateBuilder.LineEndings)EditorPrefs.GetInt(GetPersistentSettingKey(PERSISTENT_SETTING_LINE_ENDINGS, template), (int)TemplateBuilder.LineEndings.unix);
+			lineEndings = (TemplateBuilder.LineEndings)EditorPrefs.GetInt(GetPersistentSettingKey(PERSISTENT_SETTING_LINE_ENDINGS), (int)TemplateBuilder.LineEndings.unix);
+		}
 
+		/// Recovers any persistent settings from the provided template
+		public void RestorePeristentSettingsForTemplate(XmlTemplate template)
+		{
 			//Build options
 			string buildOptionsString = EditorPrefs.GetString(GetPersistentSettingKey(PERSISTENT_SETTING_BUILD_OPTIONS, template));
 
@@ -259,6 +266,11 @@ namespace Fright.Editor.Templates
 					};
 				}
 			}
+		}
+
+		public static string GetPersistentSettingKey(string settingID)
+		{
+			return string.Format("com.fright.templatebuilder.{0}", settingID);
 		}
 
 		public static string GetPersistentSettingKey(string settingID, XmlTemplate template)

@@ -40,6 +40,7 @@ namespace Fright.Editor.Templates
 		[SerializeField] private string lastKnownCreationPath;
 		[SerializeField] private Rect sharedWindowPosition = new Rect(Vector2.zero, new Vector2(700.0f, 400.0f));
 		[SerializeField] private Vector2 templatePreviewScrollPos = Vector2.zero;
+		[SerializeField] private Vector2 templateSettingsScrollPos = Vector2.zero;
 		
 		private TemplateSettings templateSettings = new TemplateSettings();
 		private List<XmlTemplate> templates = null;
@@ -49,7 +50,7 @@ namespace Fright.Editor.Templates
 		private GUIStyle codePreviewStyle;
 
 		/// The path to the currently selected folder in the project view
-		public static string templateCreatePath
+		public static string templateCreateFolderPath
 		{
 			get
 			{
@@ -73,6 +74,11 @@ namespace Fright.Editor.Templates
 				//Return the result
 				return result;
 			}
+		}
+
+		public string templateCreateFilePath
+		{
+			get { return lastKnownCreationPath != null ? lastKnownCreationPath + "/" + (templateSettings.GetBuildOptionValue("filename") ?? template.id) + ".cs" : null; }
 		}
 
 		public bool canCreateTemplate
@@ -110,7 +116,7 @@ namespace Fright.Editor.Templates
 		[MenuItem("Assets/Template Window", true)]
 		public static bool CanOpenTemplateBuilder()
 		{
-			return !string.IsNullOrEmpty(templateCreatePath);
+			return !string.IsNullOrEmpty(templateCreateFolderPath);
 		}
 
 		/// Opens the template builder window
@@ -124,7 +130,7 @@ namespace Fright.Editor.Templates
 			window.ShowUtility();
 		}
 
-		public bool SelectTemplate(string templateID, bool wipeSettings = false)
+		public bool SelectTemplate(string templateID)
 		{
 			bool didFind = false;
 
@@ -137,7 +143,7 @@ namespace Fright.Editor.Templates
 
 					if (template.id.Equals(templateID, System.StringComparison.InvariantCultureIgnoreCase))
 					{
-						SelectTemplate(template, wipeSettings);
+						SelectTemplate(template);
 						didFind = true;
 						break;
 					}
@@ -148,17 +154,24 @@ namespace Fright.Editor.Templates
 			return didFind;
 		}
 
-		public void SelectTemplate(XmlTemplate template, bool wipeSettings = false)
+		public void SelectTemplate(XmlTemplate template, bool wipeGlobalSettings = false, bool wipeTemplateSettings = false)
 		{
 			this.template = template;
 			this.codePreview = null;
 			this.templateSettings = new TemplateSettings(template);
 			lastSelectedTemplateID = template.id;
 
-			if (!wipeSettings)
+			if (!wipeGlobalSettings)
 			{
-				this.templateSettings.RestorePeristentSettings(template);
+				this.templateSettings.RestorePeristentSettings();
 			}
+
+			if (!wipeTemplateSettings)
+			{
+				this.templateSettings.RestorePeristentSettingsForTemplate(template);
+			}
+
+			EditorGUIUtility.editingTextField = false;
 		}
 
 		private void ApplyMinimumsToWindow()
@@ -192,7 +205,7 @@ namespace Fright.Editor.Templates
 		{
 			//Create the file
 			string sourceCode = TemplateBuilder.BuildCodeFromTemplate(template, templateSettings);
-			string filePath = lastKnownCreationPath + "/" + (templateSettings.GetBuildOptionValue("filename") ?? template.id) + ".cs";
+			string filePath = templateCreateFilePath;
 			File.WriteAllText(filePath, sourceCode);
 
 			//Open the file
@@ -216,9 +229,9 @@ namespace Fright.Editor.Templates
 			sharedWindowPosition = position;
 
 			//Update creation path
-			if (!string.IsNullOrEmpty(templateCreatePath))
+			if (!string.IsNullOrEmpty(templateCreateFolderPath))
 			{
-				lastKnownCreationPath = templateCreatePath;
+				lastKnownCreationPath = templateCreateFolderPath;
 			}
 
 			//Update the preview
@@ -274,59 +287,54 @@ namespace Fright.Editor.Templates
 
 		private void DrawTemplateSettings()
 		{
-			//Settings
-			EditorGUILayout.Space();
-			EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+			templateSettingsScrollPos = EditorGUILayout.BeginScrollView(templateSettingsScrollPos);
 			{
-				EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);
-				DrawTemplatePicker();
-				templateSettings.lineEndings = (TemplateBuilder.LineEndings)EditorGUILayout.EnumPopup("Line Endings", templateSettings.lineEndings);
 				EditorGUILayout.Space();
-			}
-			EditorGUILayout.EndVertical();
 
-			//Template Optional Values
-			if (templateSettings.buildOptions.Count > 0)
-			{
+				//Template Specific Options
 				EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 				{
-					EditorGUILayout.LabelField("Template Values", EditorStyles.boldLabel);
+					EditorGUILayout.LabelField("Template Settings", EditorStyles.boldLabel);
+					DrawTemplatePicker();
 					DrawBuildOptions();
+					EditorGUILayout.Space();
+
+					//Optional Usings
+					EditorGUILayout.LabelField("Using Namespaces", EditorStyles.boldLabel);
+					DrawOptionalUsings();
+
+					EditorGUILayout.BeginHorizontal();
+					{
+						EditorGUILayout.Space();
+
+						if (GUILayout.Button("Add", EditorStyles.miniButton, GUILayout.Width(80.0f)))
+						{
+							templateSettings.optionalUsings.Add(
+								new TemplateSettings.OptionalUsing()
+								{
+									isCustom = true,
+									isEnabled = true,
+								}
+							);
+						}
+					}
+					EditorGUILayout.EndHorizontal();
+
+					//Reset button
+					DrawResetSettingsButton();
+				}
+				EditorGUILayout.EndVertical();
+
+				//Global Settings
+				EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+				{
+					EditorGUILayout.LabelField("Global Settings", EditorStyles.boldLabel);
+					templateSettings.lineEndings = (TemplateBuilder.LineEndings)EditorGUILayout.EnumPopup("Line Endings", templateSettings.lineEndings);
+					EditorGUILayout.Space();
 				}
 				EditorGUILayout.EndVertical();
 			}
-
-			//Optional Usings
-			EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-			{
-				EditorGUILayout.LabelField("Namespaces", EditorStyles.boldLabel);
-				DrawOptionalUsings();
-
-				EditorGUILayout.BeginHorizontal();
-				{
-					EditorGUILayout.Space();
-
-					if (GUILayout.Button("Add", EditorStyles.miniButton, GUILayout.Width(80.0f)))
-					{
-						templateSettings.optionalUsings.Add(
-							new TemplateSettings.OptionalUsing()
-							{
-								isCustom = true,
-								isEnabled = true,
-							}
-						);
-					}
-				}
-				EditorGUILayout.EndHorizontal();
-				EditorGUILayout.Space();
-			}
-			EditorGUILayout.EndVertical();
-
-			//Close button
-			if (GUILayout.Button("Reset to defaults"))
-			{
-				SelectTemplate(template, wipeSettings: true);
-			}
+			EditorGUILayout.EndScrollView();
 
 			//Bottom buttons
 			EditorGUILayout.BeginVertical(GUILayout.ExpandHeight(true));
@@ -346,6 +354,26 @@ namespace Fright.Editor.Templates
 				EditorGUILayout.Space();
 			}
 			EditorGUILayout.EndVertical();
+		}
+
+		private void DrawResetSettingsButton()
+		{
+			GUILayout.Space(12.0f);
+			EditorGUILayout.LabelField("These settings are saved per-template", EditorStyles.centeredGreyMiniLabel);
+
+			EditorGUILayout.BeginHorizontal();
+			{
+				EditorGUILayout.Space();
+
+				if (GUILayout.Button("Reset to defaults", EditorStyles.miniButton, GUILayout.Width(160.0f)))
+				{
+					SelectTemplate(template, wipeTemplateSettings: true);
+				}
+				
+				EditorGUILayout.Space();
+			}
+			EditorGUILayout.EndHorizontal();
+			EditorGUILayout.Space();
 		}
 
 		private void DrawTemplatePicker()
@@ -398,7 +426,17 @@ namespace Fright.Editor.Templates
 		{
 			EditorGUILayout.BeginHorizontal(EditorStyles.toolbar, GUILayout.ExpandHeight(true));
 			{
-				EditorGUILayout.LabelField(lastKnownCreationPath ?? "select a folder in the project view", EditorStyles.miniLabel);
+				EditorGUILayout.LabelField(templateCreateFilePath ?? "select a folder in the project view", EditorStyles.boldLabel);
+
+				if (GUILayout.Button("Reset Template Settings", EditorStyles.toolbarButton, GUILayout.Width(140.0f)))
+				{
+					SelectTemplate(template, wipeTemplateSettings: true);
+				}
+
+				if (GUILayout.Button("Reset Global Settings", EditorStyles.toolbarButton, GUILayout.Width(140.0f)))
+				{
+					SelectTemplate(template, wipeGlobalSettings: true);
+				}
 			}
 			EditorGUILayout.EndHorizontal();
 		}
