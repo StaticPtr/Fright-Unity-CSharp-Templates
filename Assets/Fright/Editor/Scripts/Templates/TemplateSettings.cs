@@ -145,19 +145,21 @@ namespace Fright.Editor.Templates
 			return text;
 		}
 
-		private string ApplyRandomsAsReplacements(string text)
+		private Func<string, string> CreateUniqueReplacementFunction(string replacement, Func<string> functor)
 		{
-			const string replacement = "{System.Guid}";
-			int replacementLength = replacement.Length;
-			int index = text.IndexOf(replacement);
-
-			while(index >= 0)
+			return text =>
 			{
-				text = text.Substring(0, index) + Guid.NewGuid().ToString() + text.Substring(index + replacementLength);
-				index = text.IndexOf(replacement);
-			}
+				int replacementLength = replacement.Length;
+				int index = text.IndexOf(replacement);
 
-			return text;
+				while(index >= 0)
+				{
+					text = text.Substring(0, index) + functor() + text.Substring(index + replacementLength);
+					index = text.IndexOf(replacement);
+				}
+
+				return text;
+			};
 		}
 
 		private void MergeInPersistentBuildOptions(BuildOptionCollection collection)
@@ -197,7 +199,8 @@ namespace Fright.Editor.Templates
 		public TemplateSettings()
 		{
 			onApplyReplacements += ApplyBuildOptionsAsReplacements;
-			onApplyReplacements += ApplyRandomsAsReplacements;
+			onApplyReplacements += CreateUniqueReplacementFunction("{Random:System.Guid}", () => Guid.NewGuid().ToString());
+			onApplyReplacements += CreateUniqueReplacementFunction("{Random:System.Int}", () => UnityEngine.Random.Range(int.MinValue, int.MaxValue).ToString());
 		}
 
 		public TemplateSettings(XmlTemplate template) : this()
