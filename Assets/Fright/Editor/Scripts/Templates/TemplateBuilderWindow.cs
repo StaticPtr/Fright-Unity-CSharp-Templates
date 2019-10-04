@@ -330,6 +330,7 @@ namespace Fright.Editor.Templates
 				{
 					EditorGUILayout.LabelField("Global Settings", EditorStyles.boldLabel);
 					templateSettings.lineEndings = (TemplateBuilder.LineEndings)EditorGUILayout.EnumPopup("Line Endings", templateSettings.lineEndings);
+					templateSettings.tabMode = (TemplateBuilder.TabMode)EditorGUILayout.EnumPopup("Tabs", templateSettings.tabMode);
 					EditorGUILayout.Space();
 				}
 				EditorGUILayout.EndVertical();

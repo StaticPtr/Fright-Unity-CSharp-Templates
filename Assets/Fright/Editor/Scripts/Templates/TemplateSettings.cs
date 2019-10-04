@@ -33,12 +33,15 @@ namespace Fright.Editor.Templates
 	{
 		//Global Settings
 		private const string PERSISTENT_SETTING_LINE_ENDINGS = "lineendings";
+		private const string PERSISTENT_SETTING_TAB_MODE = "tabmode";
+
+		public TemplateBuilder.LineEndings lineEndings = TemplateBuilder.LineEndings.unix;
+		public TemplateBuilder.TabMode tabMode = TemplateBuilder.TabMode.tabs;
 
 		//Per-Template Settings
 		private const string PERSISTENT_SETTING_BUILD_OPTIONS = "buildoptions";
 		private const string PERSISTENT_SETTING_OPTIONAL_USINGS = "optionusings";
 
-		public TemplateBuilder.LineEndings lineEndings = TemplateBuilder.LineEndings.unix;
 		public List<BuildOption> buildOptions = new List<BuildOption>();
 		public List<OptionalUsing> optionalUsings = new List<OptionalUsing>();
 
@@ -102,6 +105,7 @@ namespace Fright.Editor.Templates
 		public void SavePersistentSettings(XmlTemplate template)
 		{
 			EditorPrefs.SetInt(GetPersistentSettingKey(PERSISTENT_SETTING_LINE_ENDINGS), (int)lineEndings);
+			EditorPrefs.SetInt(GetPersistentSettingKey(PERSISTENT_SETTING_TAB_MODE), (int)tabMode);
 			EditorPrefs.SetString(GetPersistentSettingKey(PERSISTENT_SETTING_BUILD_OPTIONS, template), buildOptions != null ? JsonUtility.ToJson(new BuildOptionCollection(buildOptions), false) : null);
 			EditorPrefs.SetString(GetPersistentSettingKey(PERSISTENT_SETTING_OPTIONAL_USINGS, template), optionalUsings != null ? JsonUtility.ToJson(new OptionalUsingCollection(optionalUsings), false) : null);
 		}
@@ -110,6 +114,7 @@ namespace Fright.Editor.Templates
 		public void RestorePeristentSettings()
 		{
 			lineEndings = (TemplateBuilder.LineEndings)EditorPrefs.GetInt(GetPersistentSettingKey(PERSISTENT_SETTING_LINE_ENDINGS), (int)TemplateBuilder.LineEndings.unix);
+			tabMode = (TemplateBuilder.TabMode)EditorPrefs.GetInt(GetPersistentSettingKey(PERSISTENT_SETTING_TAB_MODE), (int)TemplateBuilder.TabMode.tabs);
 		}
 
 		/// Recovers any persistent settings from the provided template

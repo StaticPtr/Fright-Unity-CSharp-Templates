@@ -46,6 +46,7 @@ namespace Fright.Editor.Templates
 
 			//Transform the code
 			string code = NormalizeLineEndings(codeBuilder.ToString(), settings.lineEndings);
+			code = NormalizeTabs(codeBuilder.ToString(), settings.tabMode);
 			code = settings.ApplyReplacementsToText(code);
 
 			//Return the result
@@ -88,6 +89,25 @@ namespace Fright.Editor.Templates
 			return textToFix;
 		}
 
+		/// Changes all of the tabs in the provided text into the specified format
+		public static string NormalizeTabs(string textToFix, TabMode tabMode)
+		{
+			//Perform the final transformation
+			switch(tabMode)
+			{
+				case TabMode.tabs:
+					textToFix = textToFix.Replace("    ", "\t");
+					break;
+
+				case TabMode.spaces:
+					textToFix = textToFix.Replace("\t", "    ");
+					break;
+			}
+
+			//Return the result
+			return textToFix;
+		}
+
 		#region Embedded Types
 		public enum LineEndings
 		{
@@ -95,6 +115,14 @@ namespace Fright.Editor.Templates
 			windows,
 			/// Unix and macOS \n
 			unix,
+		}
+
+		public enum TabMode
+		{
+			/// Use regular tabs "\t"
+			tabs,
+			/// Use spaces "    "
+			spaces,
 		}
 		#endregion
 	}
