@@ -13,7 +13,6 @@
 			<argument id="lhs" type="float" />
 			<argument id="rhs" type="float" />
 int result = lhs + rhs;
-Debug.Log(result);
 return result;
 		</function>
 
