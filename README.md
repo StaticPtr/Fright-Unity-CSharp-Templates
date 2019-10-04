@@ -229,3 +229,11 @@ private class MyClass
 {
 }
 ```
+
+### Automatic Replacements
+Below is a list of replacements that are automatically applied by the template builder.
+
+|Replacement|Description|
+|---|---|
+|`{Random:System.Guid}`|Every instance of this replacement will be replaced with a random C# GUID|
+|`{Random:System.Int}`|Every instance of this replacement will be replaced with a random C# 32 bit integer|
