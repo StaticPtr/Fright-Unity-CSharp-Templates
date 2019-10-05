@@ -87,7 +87,7 @@ namespace Fright.Editor.Templates
 			{
 				bool result = true;
 				
-				result &= !string.IsNullOrEmpty(lastKnownCreationPath);
+				result &= !string.IsNullOrEmpty(templateCreateFilePath) && !File.Exists(templateCreateFilePath);
 				result &= template != null;
 				result &= templateSettings != null;
 
@@ -258,7 +258,11 @@ namespace Fright.Editor.Templates
 					//Template Settings
 					EditorGUILayout.BeginVertical(GUILayout.Width(SETTINGS_PANEL_WIDTH), GUILayout.ExpandHeight(true));
 					{
-						DrawTemplateSettings();
+						GUI.enabled = !EditorApplication.isCompiling;
+						{
+							DrawTemplateSettings();
+						}
+						GUI.enabled = true;
 					}
 					EditorGUILayout.EndVertical();
 
