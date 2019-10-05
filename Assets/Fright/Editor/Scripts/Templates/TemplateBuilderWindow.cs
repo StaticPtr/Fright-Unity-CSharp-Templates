@@ -319,9 +319,7 @@ namespace Fright.Editor.Templates
 						}
 					}
 					EditorGUILayout.EndHorizontal();
-
-					//Reset button
-					DrawResetSettingsButton();
+					EditorGUILayout.Space();
 				}
 				EditorGUILayout.EndVertical();
 
@@ -355,26 +353,6 @@ namespace Fright.Editor.Templates
 				EditorGUILayout.Space();
 			}
 			EditorGUILayout.EndVertical();
-		}
-
-		private void DrawResetSettingsButton()
-		{
-			GUILayout.Space(12.0f);
-			EditorGUILayout.LabelField("These settings are saved per-template", EditorStyles.centeredGreyMiniLabel);
-
-			EditorGUILayout.BeginHorizontal();
-			{
-				EditorGUILayout.Space();
-
-				if (GUILayout.Button("Reset to defaults", EditorStyles.miniButton, GUILayout.Width(160.0f)))
-				{
-					SelectTemplate(template, wipeTemplateSettings: true);
-				}
-				
-				EditorGUILayout.Space();
-			}
-			EditorGUILayout.EndHorizontal();
-			EditorGUILayout.Space();
 		}
 
 		private void DrawTemplatePicker()
