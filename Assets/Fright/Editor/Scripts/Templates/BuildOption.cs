@@ -82,6 +82,7 @@ namespace Fright.Editor.Templates
 
 		public override void SetTextValue(string textValue)
 		{
+			base.SetTextValue(textValue);
 			int.TryParse(textValue, out intValue);
 		}
 	}
@@ -109,6 +110,7 @@ namespace Fright.Editor.Templates
 
 		public override void SetTextValue(string textValue)
 		{
+			base.SetTextValue(textValue);
 			float.TryParse(textValue, out floatValue);
 		}
 	}
@@ -136,6 +138,7 @@ namespace Fright.Editor.Templates
 
 		public override void SetTextValue(string textValue)
 		{
+			base.SetTextValue(textValue);
 			bool.TryParse(textValue, out boolValue);
 		}
 	}
