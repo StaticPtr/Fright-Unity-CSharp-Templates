@@ -231,6 +231,48 @@ private class MyClass
 }
 ```
 
+### Conditions
+Boolean build options can also be used to add or omit code from the template. The `<if-build-option>` tag is used to include code only if it's build option requirements are met.
+
+|Property|Is Optional|Default|Description|
+|---|---|---|---|
+|options|false|-|The replacement parts of one or more boolean build options that will be considered by this tag. Use a "!" infront of an option to indicate that it's value should be inversed.|
+|operation|true|and|Determines whether the options are all required, or if any of them are required. Valid values are "and" or "or"|
+
+```XML
+<template id="Conditional" format="1.0.0.0">
+  <build-option name="Has Function" replacement="hasFunction" type="bool" />
+  <class id="MyClass">
+    <if-build-option options="hasFunction">
+      <function id="MyFunction" />
+    </if-build-option>
+    <if-build-option options="!hasFunction">
+      //...
+    </if-build-option>
+  </class>
+</template>
+```
+
+> Where "Has Function" equals "true"
+
+```C#
+private class MyClass
+{
+  private void MyFunction()
+  {
+  }
+}
+```
+
+> Where "Has Function" equals "false"
+
+```C#
+private class MyClass
+{
+  //...
+}
+```
+
 ### Automatic Replacements
 Below is a list of replacements that are automatically applied by the template builder.
 
