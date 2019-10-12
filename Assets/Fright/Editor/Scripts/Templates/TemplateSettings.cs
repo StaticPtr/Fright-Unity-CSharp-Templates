@@ -213,6 +213,12 @@ namespace Fright.Editor.Templates
 			onApplyReplacements += ApplyBuildOptionsAsReplacements;
 			onApplyReplacements += CreateUniqueReplacementFunction("{Random:System.Guid}", () => Guid.NewGuid().ToString());
 			onApplyReplacements += CreateUniqueReplacementFunction("{Random:System.Int}", () => UnityEngine.Random.Range(int.MinValue, int.MaxValue).ToString());
+			onApplyReplacements += CreateUniqueReplacementFunction("{currentYear}", () => DateTime.Now.Year.ToString());
+			onApplyReplacements += CreateUniqueReplacementFunction("{currentMonth}", () => DateTime.Now.Month.ToString());
+			onApplyReplacements += CreateUniqueReplacementFunction("{currentDay}", () => DateTime.Now.Day.ToString());
+			onApplyReplacements += CreateUniqueReplacementFunction("{currentHour}", () => DateTime.Now.Hour.ToString());
+			onApplyReplacements += CreateUniqueReplacementFunction("{currentMinute}", () => DateTime.Now.Minute.ToString());
+			onApplyReplacements += CreateUniqueReplacementFunction("{currentSecond}", () => DateTime.Now.Second.ToString());
 		}
 
 		public TemplateSettings(XmlTemplate template) : this()
