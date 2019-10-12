@@ -76,14 +76,21 @@ namespace Fright.Editor.Templates
 			for(int i = 0; i < buildOptionsToCheck.Length; ++i)
 			{
 				string optionToCheck = buildOptionsToCheck[i];
+				bool isFlipped = optionToCheck.Contains("!");
+				bool isMet = "true".Equals(templateSettings.GetBuildOptionValue(optionToCheck.Replace("!", null)), System.StringComparison.InvariantCultureIgnoreCase);
+			
+				if (isFlipped)
+				{
+					isMet = !isMet;
+				}
 
 				if (isAND)
 				{
-					result &= "true".Equals(templateSettings.GetBuildOptionValue(optionToCheck), System.StringComparison.InvariantCultureIgnoreCase);
+					result &= isMet;
 				}
 				else
 				{
-					result |= "true".Equals(templateSettings.GetBuildOptionValue(optionToCheck), System.StringComparison.InvariantCultureIgnoreCase);
+					result |= isMet;
 				}
 			}
 
