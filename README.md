@@ -184,6 +184,7 @@ Additionally to putting code within a namespace, you can also define which names
 <template id="Usings" format="1.0.0.0">
   <using id="System.Collections" />
   <using id="System.Collections.Generic" />
+  <br />
   <namespace id="Fright.Example">
     <class id="MyClass" />
   </namespace>
