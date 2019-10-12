@@ -2,6 +2,7 @@
 	<using id="System.Collections" optional="true" onByDefault="true" />
 	<using id="System.Collections.Generic" optional="true" onByDefault="true" />
 
+	<br />
 	<namespace id="MyNamespace">
 		<!-- public class Test -->
 		<class id="Test" base="Object" access="public">
@@ -19,6 +20,7 @@ return result;
 			</function>
 
 			<!-- DoSomething() : void -->
+			<br />
 			<function id="DoSomething" access="public" static="true" returnType="string">
 return "Test";
 			</function>

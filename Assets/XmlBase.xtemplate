@@ -1,5 +1,6 @@
 <template id="XmlBase" format="1.0.0.0" priority="1000">
 	<build-option name="Filename" replacement="filename" default="XmlTAG" />
+	<build-option name="Tag" replacement="tag" />
 	<codeblock>
 //
 // MIT License
@@ -27,9 +28,20 @@
 	<using id="System.Xml" />
 	<using id="System.Text" />
 	<using id="System.Collections" />
-	<using id="System.Generic" />
+	<using id="System.Collections.Generic" />
+	<br />
 	<namespace id="Fright.Editor.Templates">
+		<class id="{filename}" access="public" base="XmlBase">
+/// The XML tag that this object comes from	
+public override string xmlType { get { return "{tag}"; } }
 
-		<class id="{filename}" access="public" base="XmlBase" />
+/// Converts the XML object into C# and adds it to the string builder
+			<function id="ToCSharp" virtuality="override" access="public">
+				<argument id="stringBuilder" type="StringBuilder" />
+				<argument id="indentationLevel" type="int" />
+				<argument id="templateSettings" type="TemplateSettings" />
+//...
+			</function>
+		</class>
 	</namespace>
 </template>

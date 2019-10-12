@@ -32,11 +32,6 @@ namespace Fright.Editor.Templates
 		public bool isOnByDefault;
 		public bool isOptional;
 
-		public override bool shouldAddLeadingNewline
-		{
-			get { return false; }
-		}
-
 		public override string xmlType
 		{
 			get { return "using"; }

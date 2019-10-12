@@ -3,6 +3,7 @@
 	<using id="System.Collections.Generic" optional="true" onByDefault="true" />
 
 	<!-- public class Test -->
+	<br />
 	<class id="Test" base="Object" access="public">
 		<interface-contract id="Interface1" />
 		<interface-contract id="Interface2" />
@@ -17,6 +18,7 @@ return result;
 		</function>
 
 		<!-- DoSomething() : void -->
+		<br />
 		<function id="DoSomething" access="public" static="true" returnType="string">
 return "Test";
 		</function>

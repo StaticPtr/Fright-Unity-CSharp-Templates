@@ -1,4 +1,4 @@
-﻿//
+//
 // MIT License
 // 
 // Copyright (c) 2019 Brandon Dahn
@@ -27,53 +27,21 @@ using System.Collections.Generic;
 
 namespace Fright.Editor.Templates
 {
-	/// Describes a type that can be used in an XML Template
-	public class XmlMember : XmlCSharpBase
+	public class XmlNewLine : XmlBase
 	{
-		public string type;
-		public string defaultValue;
-		public bool isStatic;
+		/// The XML tag that this object comes from
+		public override string xmlType { get { return "br"; } }
 
-		public override string xmlType
-		{
-			get { return "member"; }
-		}
-
-		public override void ConstructFromXml(XmlNode node, XmlDocument document)
-		{
-			base.ConstructFromXml(node, document);
-			type = node.GetAttribute("type");
-			isStatic = node.GetAttribute<bool>("static");
-			defaultValue = node.GetAttribute("default");
-		}
-
+		/// Converts the XML object into C# and adds it to the string builder
 		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings settings)
 		{
-			stringBuilder.AppendIndentations(indentationLevel);
-			stringBuilder.Append(accessibility);
-			stringBuilder.AppendSpace();
-			stringBuilder.AppendIf("static ", isStatic);
-			stringBuilder.Append(type ?? "?");
-			stringBuilder.AppendSpace();
-			stringBuilder.Append(id);
+			//...
+		}
 
-			if (!string.IsNullOrEmpty(defaultValue))
-			{
-				stringBuilder.Append(" = ");
-
-				if (type.Equals("string", System.StringComparison.InvariantCultureIgnoreCase))
-				{
-					stringBuilder.Append("\"");
-					stringBuilder.Append(defaultValue);	
-					stringBuilder.Append("\"");
-				}
-				else
-				{
-					stringBuilder.Append(defaultValue);
-				}
-			}
-
-			stringBuilder.Append(';');
+		/// Should this XmlBase be used (and converted to C#)
+		public override bool ShouldUse(TemplateSettings settings)
+		{
+			return true;
 		}
 	}
 }

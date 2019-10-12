@@ -128,7 +128,7 @@ namespace Fright.Editor.Templates
 					}
 					else
 					{
-						stringBuilder.Append(child.shouldAddLeadingNewline ? "\n\n" : "\n");
+						stringBuilder.Append("\n");
 					}
 
 					child.ToCSharp(stringBuilder, indentationLevel, settings);

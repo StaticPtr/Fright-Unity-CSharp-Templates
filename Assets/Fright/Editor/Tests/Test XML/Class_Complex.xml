@@ -13,6 +13,7 @@ return result;
 	</function>
 
 	<!-- DoSomething() : void -->
+	<br />
 	<function id="DoSomething" access="public" static="true" returnType="string">
 return "Test";
 	</function>

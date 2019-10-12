@@ -1,13 +1,12 @@
 <template id="My Test Template" format="1.0.0.0">
 	<using id="System.Collections" optional="true" onByDefault="true" />
 	<using id="System.Collections.Generic" optional="true" onByDefault="true" />
-
+	<br />
 	<namespace id="MyNamespace">
 
 /*
 An example of a codeblock
 */
-
 		<!-- public class Test -->
 		<class id="Test" base="Object" access="public">
 			<interface-contract id="Interface1" />
@@ -22,6 +21,7 @@ public string myString
 			</codeblock>
 
 			<!-- Add(float, float) : float -->
+			<br />
 			<function id="Add" access="public" returnType="float">
 				<argument id="lhs" type="float" />
 				<argument id="rhs" type="float" />
@@ -31,6 +31,7 @@ return result;
 			</function>
 
 			<!-- DoSomething() : void -->
+			<br />
 			<function id="DoSomething" access="public" static="true" returnType="string">
 return "Test";
 			</function>
