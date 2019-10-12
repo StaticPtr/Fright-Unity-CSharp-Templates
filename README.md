@@ -238,3 +238,9 @@ Below is a list of replacements that are automatically applied by the template b
 |---|---|
 |`{Random:System.Guid}`|Every instance of this replacement will be replaced with a random C# GUID|
 |`{Random:System.Int}`|Every instance of this replacement will be replaced with a random C# 32 bit integer|
+|`{currentYear}`|The numberical value of the current year|
+|`{currentMonth}`|The numberical value of the current month|
+|`{currentDay}`|The numberical value of the current day of the month|
+|`{currentHour}`|The numberical value of the current hour of the day|
+|`{currentMinute}`|The numberical value of the current minute of the hour|
+|`{currentSecond}`|The numberical value of the current second of the minute|
