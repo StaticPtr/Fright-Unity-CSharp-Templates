@@ -23,7 +23,6 @@ namespace Fright.Editor.Tests
 			document.LoadXml(xml);
 
 			XmlClass @class = new XmlClass();
-			XmlNode node = document.GetFirstChild("class");
 			@class.ConstructFromXml(document.GetFirstChild("class"), document);
 
 			string generatedCode = SerializeToCode(@class);
@@ -40,7 +39,6 @@ namespace Fright.Editor.Tests
 			document.LoadXml(xml);
 
 			XmlStruct @struct = new XmlStruct();
-			XmlNode node = document.GetFirstChild("struct");
 			@struct.ConstructFromXml(document.GetFirstChild("struct"), document);
 
 			string generatedCode = SerializeToCode(@struct);
