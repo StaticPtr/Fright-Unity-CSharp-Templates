@@ -34,6 +34,9 @@ namespace Fright.Editor.Templates
 		//Constants
 		public const string USING_NAMESPACE_COLOR = "#BBBBBB";
 		public const string COMMENT_COLOR = "#37A143";
+		public const string SYSTEM_KEYWORD_COLOR = "#4885A8";
+		public const string ACCESSIBILITY_KEYWORD_COLOR = "#5396BD";
+		public const string TYPE_COLOR = "#53bda8";
 
 		//Non Persistent
 		public bool enableSyntaxHighlighting;

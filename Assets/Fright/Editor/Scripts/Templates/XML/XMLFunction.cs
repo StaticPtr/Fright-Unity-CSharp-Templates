@@ -82,8 +82,11 @@ namespace Fright.Editor.Templates
 
 			//Signature
 			stringBuilder.AppendIndentations(indentationLevel);
+			TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.ACCESSIBILITY_KEYWORD_COLOR);
 			stringBuilder.Append(accessibility);
+			TemplateBuilder.EndColorBlock(stringBuilder, settings, TemplateSettings.ACCESSIBILITY_KEYWORD_COLOR);
 			stringBuilder.AppendSpace();
+			TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.SYSTEM_KEYWORD_COLOR);
 			stringBuilder.AppendIf("static ", isStatic);
 			stringBuilder.AppendIf("sealed ", isSealed);
 
@@ -92,8 +95,11 @@ namespace Fright.Editor.Templates
 				stringBuilder.Append(virtuality.ToString().Replace("@", null));
 				stringBuilder.AppendSpace();
 			}
+			TemplateBuilder.EndColorBlock(stringBuilder, settings, TemplateSettings.SYSTEM_KEYWORD_COLOR);
 
+			TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.TYPE_COLOR);
 			stringBuilder.Append(returnType ?? "void");
+			TemplateBuilder.EndColorBlock(stringBuilder, settings, TemplateSettings.TYPE_COLOR);
 			stringBuilder.AppendSpace();	
 			stringBuilder.Append(id);
 
@@ -104,7 +110,9 @@ namespace Fright.Editor.Templates
 			{
 				XmlArgument argument = arguments[i];
 
+				TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.TYPE_COLOR);
 				stringBuilder.Append(argument.type ?? "?");
+				TemplateBuilder.EndColorBlock(stringBuilder, settings, TemplateSettings.TYPE_COLOR);
 				stringBuilder.AppendSpace();
 				stringBuilder.Append(argument.id ?? "?");
 

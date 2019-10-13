@@ -69,7 +69,9 @@ namespace Fright.Editor.Templates
 			{
 				//Start
 				stringBuilder.AppendIndentations(indentationLevel);
+				TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.SYSTEM_KEYWORD_COLOR);
 				stringBuilder.Append("namespace ");
+				TemplateBuilder.EndColorBlock(stringBuilder, settings, TemplateSettings.SYSTEM_KEYWORD_COLOR);
 				stringBuilder.Append(modifiedID);
 				stringBuilder.Append("\n");
 				stringBuilder.AppendIndentations(indentationLevel);

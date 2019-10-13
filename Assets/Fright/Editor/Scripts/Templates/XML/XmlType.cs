@@ -86,18 +86,24 @@ namespace Fright.Editor.Templates
 
 			//Signature
 			stringBuilder.AppendIndentations(indentationLevel);
+			TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.ACCESSIBILITY_KEYWORD_COLOR);
 			stringBuilder.Append(accessibility);
+			TemplateBuilder.EndColorBlock(stringBuilder, settings, TemplateSettings.ACCESSIBILITY_KEYWORD_COLOR);
 			stringBuilder.AppendSpace();
+			TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.SYSTEM_KEYWORD_COLOR);
 			stringBuilder.Append(kind);
 			stringBuilder.AppendSpace();
 			stringBuilder.AppendIf("static ", isStatic);
 			stringBuilder.AppendIf("partial", isPartial);
 			stringBuilder.AppendIf("abstract ", isAbstract);
 			stringBuilder.AppendIf("sealed ", isSealed);
+			TemplateBuilder.EndColorBlock(stringBuilder, settings, TemplateSettings.SYSTEM_KEYWORD_COLOR);
 
+			TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.TYPE_COLOR);
 			stringBuilder.Append(id);
+			TemplateBuilder.EndColorBlock(stringBuilder, settings, TemplateSettings.TYPE_COLOR);
 
-			BuildBaseType(stringBuilder);
+			BuildBaseType(stringBuilder, settings);
 			stringBuilder.Append("\n");
 
 			//Body start
@@ -113,13 +119,15 @@ namespace Fright.Editor.Templates
 			stringBuilder.Append("}");
 		}
 
-		private void BuildBaseType(StringBuilder stringBuilder)
+		private void BuildBaseType(StringBuilder stringBuilder, TemplateSettings settings)
 		{
 			//Add the base class
 			if (!string.IsNullOrEmpty(@base))
 			{
 				stringBuilder.Append(" : ");
+				TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.TYPE_COLOR);
 				stringBuilder.Append(@base);
+				TemplateBuilder.EndColorBlock(stringBuilder, settings, TemplateSettings.TYPE_COLOR);
 			}
 
 			//Add the interfaces
@@ -136,7 +144,9 @@ namespace Fright.Editor.Templates
 				}
 
 				//Add the interface
+				TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.TYPE_COLOR);
 				stringBuilder.Append(interfaces[i].id);
+				TemplateBuilder.EndColorBlock(stringBuilder, settings, TemplateSettings.TYPE_COLOR);
 			}
 		}
 	}
