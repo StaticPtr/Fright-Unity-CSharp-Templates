@@ -159,6 +159,7 @@ namespace Fright.Editor.Templates
 			this.template = template;
 			this.codePreview = null;
 			this.templateSettings = new TemplateSettings(template);
+			this.templateSettings.enableSyntaxHighlighting = true;
 			lastSelectedTemplateID = template.id;
 
 			if (!wipeGlobalSettings)
@@ -203,6 +204,8 @@ namespace Fright.Editor.Templates
 
 		private void CreateFileFromTemplate()
 		{
+			templateSettings.enableSyntaxHighlighting = false;
+
 			//Create the file
 			string sourceCode = TemplateBuilder.BuildCodeFromTemplate(template, templateSettings);
 			string filePath = templateCreateFilePath;
@@ -247,6 +250,7 @@ namespace Fright.Editor.Templates
 				codePreviewStyle.wordWrap = false;
 				codePreviewStyle.alignment = TextAnchor.UpperLeft;
 				codePreviewStyle.padding = new RectOffset(6, 6, 6, 6);
+				codePreviewStyle.richText = true;
 
 				codePreviewStyle.normal.textColor =
 					codePreviewStyle.active.textColor =

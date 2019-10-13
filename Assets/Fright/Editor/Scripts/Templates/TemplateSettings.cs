@@ -31,6 +31,13 @@ namespace Fright.Editor.Templates
 {
 	public class TemplateSettings
 	{
+		//Constants
+		public const string USING_NAMESPACE_COLOR = "#BBBBBB";
+		public const string COMMENT_COLOR = "#37A143";
+
+		//Non Persistent
+		public bool enableSyntaxHighlighting;
+
 		//Global Settings
 		private const string PERSISTENT_SETTING_LINE_ENDINGS = "lineendings";
 		private const string PERSISTENT_SETTING_TAB_MODE = "tabmode";

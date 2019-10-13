@@ -30,6 +30,11 @@ namespace Fright.Editor.Templates
 	{
 		/// The identifier for the XML object
 		public string id;
+
+		/// An optional string for the text color of the generated C# of this tag.
+		/// It is the responsibility of the TCSharp function to use this!
+		public string textColor;
+
 		/// The XML tag that this object comes from
 		public abstract string xmlType { get; }
 
@@ -46,6 +51,7 @@ namespace Fright.Editor.Templates
 		public virtual void ConstructFromXml(XmlNode node, XmlDocument document)
 		{
 			id = node.GetAttribute("id");
+			textColor = node.GetAttribute("text-color");
 		}
 
 		/// Applies any text replacements to the ID of this object and returns the result

@@ -46,9 +46,13 @@ namespace Fright.Editor.Templates
 
 		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings settings)
 		{
-			stringBuilder.Append("using ");
-			stringBuilder.Append(id);
-			stringBuilder.Append(";");
+			TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.USING_NAMESPACE_COLOR);
+			{
+				stringBuilder.Append("using ");
+				stringBuilder.Append(id);
+				stringBuilder.Append(";");
+			}
+			TemplateBuilder.EndColorBlock(stringBuilder, settings, TemplateSettings.USING_NAMESPACE_COLOR);
 		}
 	}
 

@@ -108,6 +108,26 @@ namespace Fright.Editor.Templates
 			return textToFix;
 		}
 
+		/// Starts a unity color tag to the string builder 
+		public static void BeginColorBlock(StringBuilder stringBuilder, TemplateSettings templateSettings, string colorCode)
+		{
+			if (templateSettings != null && templateSettings.enableSyntaxHighlighting && !string.IsNullOrEmpty(colorCode))
+			{
+				stringBuilder.Append("<color=");
+				stringBuilder.Append(colorCode);
+				stringBuilder.Append(">");
+			}
+		}
+
+		/// Closes a unity color tag to the string builder 
+		public static void EndColorBlock(StringBuilder stringBuilder, TemplateSettings templateSettings, string colorCode)
+		{
+			if (templateSettings != null && templateSettings.enableSyntaxHighlighting && !string.IsNullOrEmpty(colorCode))
+			{
+				stringBuilder.Append("</color>");
+			}
+		}
+
 		#region Embedded Types
 		public enum LineEndings
 		{

@@ -78,7 +78,9 @@ namespace Fright.Editor.Templates
 			//Comment
 			if (comment != null)
 			{
+				TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.COMMENT_COLOR);
 				stringBuilder.AppendWithIndentation("/// " + comment, indentationLevel);
+				TemplateBuilder.EndColorBlock(stringBuilder, settings, TemplateSettings.COMMENT_COLOR);
 				stringBuilder.Append("\n");
 			}
 
