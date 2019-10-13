@@ -7,6 +7,7 @@
 	<using id="UnityEngine" optional="true" default="true" />
 	<using id="UnityEngine.UI" optional="true" default="false" />
 
+	<br />
 	<namespace id="{namespace}">
 		<class id="{filename}" access="public" base="MonoBehaviour">
 			<function id="Start" access="private" />

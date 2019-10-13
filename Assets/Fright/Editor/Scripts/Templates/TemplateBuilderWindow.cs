@@ -244,10 +244,21 @@ namespace Fright.Editor.Templates
 			if (codePreviewStyle == null)
 			{
 				codePreviewStyle = new GUIStyle("box");
+				codePreviewStyle.wordWrap = false;
 				codePreviewStyle.alignment = TextAnchor.UpperLeft;
 				codePreviewStyle.normal.textColor = EditorStyles.label.normal.textColor;
 				codePreviewStyle.active.textColor = EditorStyles.label.active.textColor;
 				codePreviewStyle.focused.textColor = EditorStyles.label.focused.textColor;
+				codePreviewStyle.stretchWidth = true;
+				codePreviewStyle.stretchHeight = true;
+
+				Font firaFont = AssetDatabase.LoadAssetAtPath<Font>("Assets/Fright/Editor/Fonts/FiraCode-Regular.ttf");
+
+				if (firaFont)
+				{
+					codePreviewStyle.font = firaFont;
+					codePreviewStyle.fontSize = 12;
+				}
 			}
 
 			//Drawing
@@ -400,8 +411,11 @@ namespace Fright.Editor.Templates
 
 		private void DrawTemplatePreview()
 		{
+			Vector2 preferredSize = codePreviewStyle.CalcSize(new GUIContent(codePreview ?? string.Empty));
 			templatePreviewScrollPos = EditorGUILayout.BeginScrollView(templatePreviewScrollPos);
-			EditorGUILayout.LabelField(GUIContent.none, new GUIContent(codePreview ?? string.Empty), codePreviewStyle, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+			{
+				EditorGUILayout.LabelField(GUIContent.none, new GUIContent(codePreview ?? string.Empty), codePreviewStyle, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true), GUILayout.MinWidth(preferredSize.x), GUILayout.MinHeight(preferredSize.y));
+			}
 			EditorGUILayout.EndScrollView();
 		}
 

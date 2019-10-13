@@ -6,6 +6,7 @@
 	<using id="System.Collections.Generic" optional="true" default="true" />
 	<using id="UnityEngine" optional="true" default="false" />
 
+	<br />
 	<namespace id="{namespace}">
 		<class id="{filename}" access="public">
 //...
