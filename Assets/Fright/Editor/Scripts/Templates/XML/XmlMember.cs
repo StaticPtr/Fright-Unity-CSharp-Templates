@@ -50,10 +50,16 @@ namespace Fright.Editor.Templates
 		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings settings)
 		{
 			stringBuilder.AppendIndentations(indentationLevel);
+			TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.ACCESSIBILITY_KEYWORD_COLOR);
 			stringBuilder.Append(accessibility);
+			TemplateBuilder.EndColorBlock(stringBuilder, settings, TemplateSettings.ACCESSIBILITY_KEYWORD_COLOR);
 			stringBuilder.AppendSpace();
+			TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.SYSTEM_KEYWORD_COLOR);
 			stringBuilder.AppendIf("static ", isStatic);
+			TemplateBuilder.EndColorBlock(stringBuilder, settings, TemplateSettings.SYSTEM_KEYWORD_COLOR);
+			TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.TYPE_COLOR);
 			stringBuilder.Append(type ?? "?");
+			TemplateBuilder.EndColorBlock(stringBuilder, settings, TemplateSettings.TYPE_COLOR);
 			stringBuilder.AppendSpace();
 			stringBuilder.Append(id);
 

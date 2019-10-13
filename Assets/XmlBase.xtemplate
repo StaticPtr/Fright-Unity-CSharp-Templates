@@ -35,13 +35,13 @@
 /// The XML tag that this object comes from	
 public override string xmlType { get { return "{tag}"; } }
 
-		<br />
-		<function id="ToCSharp" virtuality="override" access="public" comment="Converts the XML object into C# and adds it to the string builder">
-			<argument id="stringBuilder" type="StringBuilder" />
-			<argument id="indentationLevel" type="int" />
-			<argument id="templateSettings" type="TemplateSettings" />
+			<br />
+			<function id="ToCSharp" virtuality="override" access="public" comment="Converts the XML object into C# and adds it to the string builder">
+				<argument id="stringBuilder" type="StringBuilder" />
+				<argument id="indentationLevel" type="int" />
+				<argument id="templateSettings" type="TemplateSettings" />
 
-		</function>
+			</function>
 		</class>
 	</namespace>
 </template>
