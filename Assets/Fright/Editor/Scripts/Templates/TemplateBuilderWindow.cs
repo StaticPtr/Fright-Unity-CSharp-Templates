@@ -246,13 +246,19 @@ namespace Fright.Editor.Templates
 				codePreviewStyle = new GUIStyle("box");
 				codePreviewStyle.wordWrap = false;
 				codePreviewStyle.alignment = TextAnchor.UpperLeft;
-				codePreviewStyle.normal.textColor = EditorStyles.label.normal.textColor;
-				codePreviewStyle.active.textColor = EditorStyles.label.active.textColor;
-				codePreviewStyle.focused.textColor = EditorStyles.label.focused.textColor;
-				codePreviewStyle.stretchWidth = true;
-				codePreviewStyle.stretchHeight = true;
+				codePreviewStyle.padding = new RectOffset(6, 6, 6, 6);
 
-				Font firaFont = AssetDatabase.LoadAssetAtPath<Font>("Assets/Fright/Editor/Fonts/FiraCode-Regular.ttf");
+				codePreviewStyle.normal.textColor =
+					codePreviewStyle.active.textColor =
+					codePreviewStyle.focused.textColor =
+					Color.white;
+
+				codePreviewStyle.normal.background = 
+					codePreviewStyle.active.background =
+					codePreviewStyle.focused.background = 
+					AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Fright/Editor/Skins/CodePreviewBackground.png");
+
+				Font firaFont = AssetDatabase.LoadAssetAtPath<Font>("Assets/Fright/Editor/Skins/FiraCode-Regular.ttf");
 
 				if (firaFont)
 				{
