@@ -82,7 +82,7 @@ namespace Fright.Editor.Templates
 				base.ToCSharp(stringBuilder, indentationLevel + 1, settings);
 				stringBuilder.Append("\n");
 				stringBuilder.AppendIndentations(indentationLevel);
-				stringBuilder.Append("}\n");
+				stringBuilder.Append("}");
 			}
 			else
 			{
