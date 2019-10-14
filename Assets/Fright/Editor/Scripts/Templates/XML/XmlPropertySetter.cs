@@ -1,4 +1,4 @@
-﻿//
+//
 // MIT License
 // 
 // Copyright (c) 2019 Brandon Dahn
@@ -27,24 +27,13 @@ using System.Collections.Generic;
 
 namespace Fright.Editor.Templates
 {
-	/// Describes a type that can be used in an XML Template
-	public class XmlMember : XmlProperty
+	public class XmlPropertySetter : XmlPropertyGetter
 	{
+		public override string keyword { get { return "set"; } }
+
 		public override string xmlType
 		{
-			get { return "member"; }
-		}
-
-		public override void ConstructFromXml(XmlNode node, XmlDocument document)
-		{
-			base.ConstructFromXml(node, document);
-			virtuality = Virtuality.none;
-			children.Clear();
-		}
-
-		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings settings)
-		{
-			base.ToCSharp(stringBuilder, indentationLevel, settings);
+			get { return "setter"; }
 		}
 	}
 }
