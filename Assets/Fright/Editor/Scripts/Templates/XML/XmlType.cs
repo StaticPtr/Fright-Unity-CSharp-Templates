@@ -37,7 +37,6 @@ namespace Fright.Editor.Templates
 		public string @base;
 		public string comment;
 		public List<XmlInterfaceContract> interfaces = new List<XmlInterfaceContract>();
-		public List<XmlBase> children = new List<XmlBase>();
 
 		public abstract string kind
 		{
@@ -47,6 +46,7 @@ namespace Fright.Editor.Templates
 		public override void ConstructFromXml(XmlNode node, XmlDocument document)
 		{
 			base.ConstructFromXml(node, document);
+			children.Clear();
 
 			//One offs
 			isSealed = node.GetAttribute("sealed", "false").Equals("true", System.StringComparison.InvariantCultureIgnoreCase);

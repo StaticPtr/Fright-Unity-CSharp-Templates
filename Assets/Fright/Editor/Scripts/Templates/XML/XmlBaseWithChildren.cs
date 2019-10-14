@@ -1,4 +1,4 @@
-﻿//
+//
 // MIT License
 // 
 // Copyright (c) 2019 Brandon Dahn
@@ -21,19 +21,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 using System.Xml;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace Fright.Editor.Templates
 {
-	public abstract class XmlCSharpBase : XmlBaseWithChildren
+	public abstract class XmlBaseWithChildren : XmlBase
 	{
-		public string accessibility;
+		public List<XmlBase> children = new List<XmlBase>();
 
+		/// Constructs the object from an Xml node and document
 		public override void ConstructFromXml(XmlNode node, XmlDocument document)
-		{
+		{		
 			base.ConstructFromXml(node, document);
-			accessibility = node.GetAttribute("access", "private");
+
+			//Children
+			foreach (XmlNode child in node.ChildNodes)
+			{
+				XmlBase xmlBase = XmlTemplate.CreateXmlObjectFromNode(child, document);
+
+				if (xmlBase != null)
+				{
+					children.Add(xmlBase);
+				}
+			}
+		}
+
+		/// Converts the XML object into C# and adds it to the string builder
+		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings templateSettings)
+		{
+			XmlTemplate.ChildrenToCSharp(stringBuilder, indentationLevel, templateSettings, children);
 		}
 	}
 }

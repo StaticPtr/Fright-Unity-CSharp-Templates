@@ -35,7 +35,6 @@ namespace Fright.Editor.Templates
 		public bool isStatic;
 		public bool isSealed;
 		public string returnType;
-		public string body;
 		public string comment;
 
 		public override string xmlType
@@ -57,11 +56,7 @@ namespace Fright.Editor.Templates
 			//Children
 			foreach(XmlNode child in node.ChildNodes)
 			{
-				if (child is XmlText)
-				{
-					body = child.InnerText.Trim();
-				}
-				else if (child.LocalName.Equals("argument", System.StringComparison.InvariantCultureIgnoreCase))
+				if (child.LocalName.Equals("argument", System.StringComparison.InvariantCultureIgnoreCase))
 				{
 					arguments.Add(new XmlArgument(child, document));
 				}
@@ -136,11 +131,8 @@ namespace Fright.Editor.Templates
 				stringBuilder.AppendIndentations(indentationLevel);
 				stringBuilder.Append("{\n");
 
-				if (body != null)
-				{
-					stringBuilder.AppendWithIndentation(body, indentationLevel + 1);
-					stringBuilder.Append("\n");
-				}
+				base.ToCSharp(stringBuilder, indentationLevel + 1, settings);
+				stringBuilder.Append("\n");
 
 				stringBuilder.AppendIndentations(indentationLevel);
 				stringBuilder.Append("}");
