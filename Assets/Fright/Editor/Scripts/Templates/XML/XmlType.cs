@@ -35,7 +35,6 @@ namespace Fright.Editor.Templates
 		public bool isStatic;
 		public bool isAbstract;
 		public string @base;
-		public string comment;
 		public List<XmlInterfaceContract> interfaces = new List<XmlInterfaceContract>();
 
 		public abstract string kind
@@ -54,7 +53,6 @@ namespace Fright.Editor.Templates
 			isPartial = node.GetAttribute("partial", "false").Equals("true", System.StringComparison.InvariantCultureIgnoreCase);
 			isAbstract = node.GetAttribute("abstract", "false").Equals("true", System.StringComparison.InvariantCultureIgnoreCase);
 			@base = node.GetAttribute("base");
-			comment = node.GetAttribute("comment");
 
 			//Children
 			foreach (XmlNode child in node.ChildNodes)
@@ -75,15 +73,6 @@ namespace Fright.Editor.Templates
 		/// Converts the XML object into C# and adds it to the string builder
 		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings settings)
 		{
-			//Comment
-			if (comment != null)
-			{
-				TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.COMMENT_COLOR);
-				stringBuilder.AppendWithIndentation("/// " + comment, indentationLevel);
-				TemplateBuilder.EndColorBlock(stringBuilder, settings, TemplateSettings.COMMENT_COLOR);
-				stringBuilder.Append("\n");
-			}
-
 			//Signature
 			stringBuilder.AppendIndentations(indentationLevel);
 			TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.ACCESSIBILITY_KEYWORD_COLOR);

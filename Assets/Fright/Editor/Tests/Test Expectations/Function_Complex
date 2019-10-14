@@ -1,4 +1,3 @@
-/// Adds two numbers together
 public override int Add(int lhs, int rhs)
 {
 	return lhs + rhs;

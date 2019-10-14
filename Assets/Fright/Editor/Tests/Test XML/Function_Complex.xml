@@ -1,4 +1,4 @@
-<function id="Add" access="public" virtuality="override" returnType="int" comment="Adds two numbers together">
+<function id="Add" access="public" virtuality="override" returnType="int">
 	<argument id="lhs" type="int" />
 	<argument id="rhs" type="int" />
 return lhs + rhs;

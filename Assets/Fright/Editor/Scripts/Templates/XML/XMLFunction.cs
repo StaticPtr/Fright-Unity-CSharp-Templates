@@ -35,7 +35,6 @@ namespace Fright.Editor.Templates
 		public bool isStatic;
 		public bool isSealed;
 		public string returnType;
-		public string comment;
 
 		public override string xmlType
 		{
@@ -51,7 +50,6 @@ namespace Fright.Editor.Templates
 			isStatic = node.GetAttribute("static", "false").Equals("true", System.StringComparison.InvariantCultureIgnoreCase);
 			virtuality = node.GetEnumAttribute<Virtuality>("virtuality", Virtuality.none);
 			returnType = node.GetAttribute("returnType", "void");
-			comment = node.GetAttribute("comment");
 
 			//Children
 			foreach(XmlNode child in node.ChildNodes)
@@ -66,15 +64,6 @@ namespace Fright.Editor.Templates
 		/// Converts the XML object into C# and adds it to the string builder
 		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings settings)
 		{
-			//Comment
-			if (comment != null)
-			{
-				TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.COMMENT_COLOR);
-				stringBuilder.AppendWithIndentation("/// " + comment, indentationLevel);
-				TemplateBuilder.EndColorBlock(stringBuilder, settings, TemplateSettings.COMMENT_COLOR);
-				stringBuilder.Append("\n");
-			}
-
 			//Signature
 			stringBuilder.AppendIndentations(indentationLevel);
 			TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.ACCESSIBILITY_KEYWORD_COLOR);
