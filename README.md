@@ -4,6 +4,8 @@ A simple tool for creating C# files in Unity using extensible templates
 ## Purpose
 The purpose of this tool is to make creation of new Unity scripts easier by providing templates. These templates fill out boilerplate code such as usings, namespaces, and common functions. Additionally the template builder normalizes files for line endings.
 
+![Template Builder Window Preview](https://github.com/StaticPtr/Fright-Unity-CSharp-Templates/blob/master/Readme%20Assets/TemplateBuilderWindow-0001.png?raw=true)
+
 ## Usage
 1) Download the `.unitypackage` release file and import it into your project
 2) Select a folder in the Unity Project view, right click, and select "Template Window"
@@ -20,7 +22,7 @@ The template builder window will automatically pick up any `.xtemplate` files in
 </template>
 ```
 
-While it's possible to simply put plain text within the body of the template, and that plain text would show up in the final `.cs` file, `.xtemplate` files are designed to have their contents built using predefined tags such as `<function>`, `<class>`, etc... This gives the builder knowledge about the contents of the template and allows it to enforce coding convention.
+While it's possible to simply put plain text within the body of the template, and that plain text would show up in the final `.cs` file, `.xtemplate` files are designed to have their contents built using predefined tags such as `<function>`, `<class>`, etc... This gives the builder knowledge about the contents of the template, providing syntax highlighting in the code preview, and allowing it to enforce coding conventions.
 
 ### Types - Interface and Enum
 These simple tags will create interfaces and enums respectively in the template.
@@ -29,7 +31,6 @@ These simple tags will create interfaces and enums respectively in the template.
 |---|---|---|---|
 |id|false|-|The name of the type|
 |base|true|-|The parent type of the new type|
-|comment|true|-|An XML comment for the type|
 |access|true|private|The accessibility of the type. Such as "public", "private", or "protected"|
 
 Interfaces can also have additional interfaces that they implement. These use the `<interface-contract>` tag to indicate that the type implements an interface.
@@ -108,6 +109,64 @@ private class MyClass
   private int x = 5;
   public float y;
   public string z = "five";
+}
+```
+
+#### Properties
+Properties are similar to members, except they have additional attributes such as virtuality. Additionally properties can have get and set functions.
+
+> &lt;property&gt;
+
+|Property|Is Optional|Default|Description|
+|---|---|---|---|
+|id|false|-|The name of the member|
+|type|false|-|The type of the member|
+|default|true|-|An optional default value for the member|
+|access|true|private|The accessibility of the type. Such as "public", "private", or "protected"|
+|static|true|false|Is the member static|
+|virtuality|true|none|Options: none, virtual, abstract, override|
+
+> &lt;getter&gt; or &lt;setter&gt;
+
+|Property|Is Optional|Default|Description|
+|---|---|---|---|
+|access|true|private|The accessibility of the type. Such as "public", "private", or "protected"|
+
+```XML
+<template id="Property" format="1.0.0.0">
+  <class id="MyClass">
+    <property id="first" type="int" access="public" />
+    <property id="second" type="int" access="public">
+      <getter>return 5;</getter>
+    </property>
+    <property id="third" type="int" virtuality="virtual">
+      <getter>return first</getter>
+      <setter>
+first = value;
+second = value * 2;
+      </setter>
+    </property>
+  </class>
+</template>
+```
+
+```C#
+private class MyClass
+{
+  public int first;
+  public int second
+  {
+    get { return 5; }
+  }
+  public int third
+  {
+    get { return first; }
+    set
+    {
+      first = value;
+      second = value * 2;
+    }
+  }
 }
 ```
 
@@ -286,3 +345,36 @@ Below is a list of replacements that are automatically applied by the template b
 |`{currentHour}`|The numberical value of the current hour of the day|
 |`{currentMinute}`|The numberical value of the current minute of the hour|
 |`{currentSecond}`|The numberical value of the current second of the minute|
+
+## Additional Tags
+### Breaks
+The fully enclosed `<br />` tag can be used to add a new line anywhere in the template.
+
+### Comments
+The `<comment>` and `<xml-comment>` tags can be used to create double `//` or triple `///` comment blocks.
+
+
+```XML
+<template id="Member" format="1.0.0.0">
+  <xml-comment>This class doesn't do anything</xml-comment>
+  <class id="MyClass">
+    <member id="x" type="int" default="5" />
+    <member id="y" type="float" access="public" />
+    <br />
+    <comment>What is even the point?</comment>
+    <member id="z" type="string" access="public" default="five" />
+  </class>
+</template>
+```
+
+```C#
+/// This class doesn't do anything
+private class MyClass
+{
+  private int x = 5;
+  public float y;
+  
+  // What is even the point?
+  public string z = "five";
+}
+```
