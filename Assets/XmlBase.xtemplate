@@ -1,42 +1,50 @@
 <template id="XmlBase" format="1.0.0.0" priority="1000">
 	<build-option name="Filename" replacement="filename" default="XmlTAG" />
 	<build-option name="Tag" replacement="tag" />
-	<codeblock text-color="#37a143">
-//
-// MIT License
-// 
-// Copyright (c) {currentYear} Brandon Dahn
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-	</codeblock>
+	<build-option name="Base" replacement="base" default="XmlBase" />
+	<comment>
+MIT License
+
+Copyright (c) {currentYear} Brandon Dahn
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+	</comment>
 	<using id="System.Xml" />
 	<using id="System.Text" />
 	<using id="System.Collections" />
 	<using id="System.Collections.Generic" />
 	<br />
 	<namespace id="Fright.Editor.Templates">
-		<class id="{filename}" access="public" base="XmlBase">
-/// The XML tag that this object comes from	
-public override string xmlType { get { return "{tag}"; } }
-
+		<class id="{filename}" access="public" base="{base}">
+			<xml-comment>The XML tag that this object comes from</xml-comment>
+			<property id="xmlType" virtuality="override" access="public" type="string">
+				<getter>return "{tag}";</getter>
+			</property>
 			<br />
-			<function id="ToCSharp" virtuality="override" access="public" comment="Converts the XML object into C# and adds it to the string builder">
+			<xml-comment>Constructs the object from an Xml node and document</xml-comment>
+			<function id="ConstructFromXml" virtuality="override" access="public">
+				<argument id="node" type="XmlNode" />
+				<argument id="document" type="XmlDocument" />
+			</function>
+			<br />
+			<xml-comment>Converts the XML object into C# and adds it to the string builder</xml-comment>
+			<function id="ToCSharp" virtuality="override" access="public">
 				<argument id="stringBuilder" type="StringBuilder" />
 				<argument id="indentationLevel" type="int" />
 				<argument id="templateSettings" type="TemplateSettings" />
