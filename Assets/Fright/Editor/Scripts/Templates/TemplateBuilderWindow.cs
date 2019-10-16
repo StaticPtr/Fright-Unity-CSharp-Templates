@@ -405,7 +405,9 @@ namespace Fright.Editor.Templates
 							//Add a separator
 							if (lastPriority != int.MinValue && _template.priority / 100 != lastPriority / 100)
 							{
-								menu.AddSeparator(Path.GetDirectoryName(_template.id + ".t") + "/");
+								string path = Path.GetDirectoryName(_template.id + ".t");
+
+								menu.AddSeparator(string.IsNullOrEmpty(path) ? string.Empty : path + "/");
 							}
 
 							menu.AddItem(new GUIContent(template.id), false, () => SelectTemplate(_template));
