@@ -291,12 +291,12 @@ namespace Fright.Editor.Templates
 
 		public static string GetPersistentSettingKey(string settingID)
 		{
-			return string.Format("com.fright.templatebuilder.{0}", settingID);
+			return string.Format("com.fright.templatebuilder.{0}.{1}", Application.productName, settingID);
 		}
 
 		public static string GetPersistentSettingKey(string settingID, XmlTemplate template)
 		{
-			return string.Format("com.fright.templatebuilder.{0}.{1}", template.id, settingID);
+			return string.Format("com.fright.templatebuilder.{0}.{1}.{2}", Application.productName, template.id, settingID);
 		}
 		#endregion
 
