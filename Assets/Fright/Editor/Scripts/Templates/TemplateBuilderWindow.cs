@@ -51,6 +51,7 @@ namespace Fright.Editor.Templates
 		private string codePreview = null;
 
 		private GUIStyle codePreviewStyle;
+		private GUIContent overlapUsingNamespaceContent = new GUIContent("Overlap Usings", "When false, if a template includes a using statement that matches a namespace block, that using statement will be removed");
 
 		/// The path to the currently selected folder in the project view
 		public static string templateCreateFolderPath
@@ -371,6 +372,7 @@ namespace Fright.Editor.Templates
 					EditorGUILayout.LabelField("Global Settings", EditorStyles.boldLabel);
 					templateSettings.lineEndings = (TemplateBuilder.LineEndings)EditorGUILayout.EnumPopup("Line Endings", templateSettings.lineEndings);
 					templateSettings.tabMode = (TemplateBuilder.TabMode)EditorGUILayout.EnumPopup("Tabs", templateSettings.tabMode);
+					templateSettings.includeOverlappingUsingNamespace = EditorGUILayout.Toggle(overlapUsingNamespaceContent, templateSettings.includeOverlappingUsingNamespace);
 					EditorGUILayout.Space();
 				}
 				EditorGUILayout.EndVertical();

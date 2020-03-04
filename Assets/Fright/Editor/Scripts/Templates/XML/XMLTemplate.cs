@@ -187,7 +187,10 @@ namespace Fright.Editor.Templates
 			{
 				if (!@using.isOptional || settings == null || settings.IsOptionalUsingEnabled(@using.id))
 				{
-					yield return @using;
+					if (settings.includeOverlappingUsingNamespace || !IsNamespaceUsed(@using.id, settings))
+					{
+						yield return @using;
+					}
 				}
 			}
 
@@ -198,10 +201,13 @@ namespace Fright.Editor.Templates
 				{
 					if (@using.isCustom && @using.isEnabled && !string.IsNullOrEmpty(@using.id))
 					{
-						yield return new XmlUsingNamespace()
+						if (settings.includeOverlappingUsingNamespace || !IsNamespaceUsed(@using.id, settings))
 						{
-							id = @using.id,
-						};
+							yield return new XmlUsingNamespace()
+							{
+								id = @using.id,
+							};
+						}
 					}
 				}
 			}
@@ -229,6 +235,21 @@ namespace Fright.Editor.Templates
 			}
 
 			//Return the result
+			return result;
+		}
+
+		private bool IsNamespaceUsed(string id, TemplateSettings settings)
+		{
+			bool result = false;
+
+			for(int i = 0; i < children.Count && !result; ++i)
+			{
+				if (children[i] is XmlNamespace @namespace)
+				{
+					result = settings.ApplyReplacementsToText(@namespace.id) == id;
+				}
+			}
+
 			return result;
 		}
 
