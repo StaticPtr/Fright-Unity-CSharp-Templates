@@ -33,6 +33,9 @@ namespace Fright.Editor.Templates
 	/// An editor window for creating C# scripts from template files
 	public class TemplateBuilderWindow : EditorWindow
 	{
+		public const string METADATA_FILENAME_PREFIX = "filenamePrefix";
+		public const string METADATA_FILENAME_SUFFIX = "filenameSuffix";
+
 		private const float MIN_WIDTH = 450.0f;
 		private const float MIN_HEIGHT = 400.0f;
 		private const float SETTINGS_PANEL_WIDTH = 300.0f;
@@ -78,7 +81,21 @@ namespace Fright.Editor.Templates
 
 		public string templateCreateFilePath
 		{
-			get { return lastKnownCreationPath != null ? lastKnownCreationPath + "/" + (templateSettings.GetBuildOptionValue("filename") ?? template.id) + ".cs" : null; }
+			get
+			{
+				string result = null;
+
+				if (lastKnownCreationPath != null)
+				{
+					result = lastKnownCreationPath + "/";
+					result += template.GetMetaData(METADATA_FILENAME_PREFIX, string.Empty);
+					result += (templateSettings.GetBuildOptionValue("filename") ?? template.id);
+					result += template.GetMetaData(METADATA_FILENAME_SUFFIX, string.Empty);
+					result += ".cs";
+				}
+
+				return result;
+			}
 		}
 
 		public bool canCreateTemplate

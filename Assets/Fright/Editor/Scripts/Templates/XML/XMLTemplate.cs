@@ -136,6 +136,26 @@ namespace Fright.Editor.Templates
 			}
 		}
 
+		public string GetMetaData(string key, string fallback = null)
+		{
+			string result = fallback;
+
+			//Find the first XmlMetaData that matches the provided key
+			for(int i = 0; i < children.Count; ++i)
+			{
+				if (children[i] is XmlMetaData metaData)
+				{
+					if (metaData.key.Equals(key, System.StringComparison.InvariantCultureIgnoreCase))
+					{
+						result = metaData.value;
+					}
+				}
+			}
+
+			//Return the result
+			return result;
+		}
+
 		public IEnumerable<XmlBase> GetSerializableChildren(TemplateSettings settings)
 		{
 			//Other children
