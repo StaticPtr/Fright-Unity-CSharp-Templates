@@ -56,7 +56,6 @@ Classes and Structures act in the same was as Interfaces and Enums, but have mor
 |---|---|---|---|
 |id|false|-|The name of the type|
 |base|true|-|The parent type of the new type|
-|comment|true|-|An XML comment for the type|
 |access|true|private|The accessibility of the type. Such as "public", "private", or "protected"|
 |sealed|true|false|Is the type sealed|
 |partial|true|false|Is the type a partial type|
@@ -66,7 +65,8 @@ Classes and Structures act in the same was as Interfaces and Enums, but have mor
 
 ```XML
 <template id="Class" format="1.0.0.0">
-  <class id="MyClass" access="internal" base="ParentClass" comment="This is my class. Stay away!">
+  <xml-comment>This is my class. Stay away!</xml-comment>
+  <class id="MyClass" access="internal" base="ParentClass">
     <!-- Interfaces -->
     <interface-contract id="System.IDisposable" />
     <!-- Class Body -->
@@ -176,7 +176,6 @@ Functions use the `<function>` tag. You must declare the name and return type of
 |Property|Is Optional|Default|Description|
 |---|---|---|---|
 |id|false|-|The name of the function|
-|comment|true|-|An XML comment for the function|
 |returnType|true|void|The return type of the function|
 |access|true|private|The accessibility of the type. Such as "public", "private", or "protected"|
 |virtuality|true|none|Options: none, virtual, abstract, override|
@@ -349,6 +348,23 @@ Below is a list of replacements that are automatically applied by the template b
 ## Additional Tags
 ### Breaks
 The fully enclosed `<br />` tag can be used to add a new line anywhere in the template.
+
+### Meta Data
+The `<meta>` tag can be used to change how the builder builds your templates. Below are the supported meta data values:
+
+|Key|Description|
+|---|---|
+|filenamePrefix|An optional prefix that is appended to the beginning of the file name|
+|filenameSuffix|An optional suffix that is appended to the end of the file name, but before the extension|
+
+```XML
+<template id="Meta" format="1.0.0.0">
+  <meta key="filenamePrefix" value="Mega" />
+  <build-option name="Filename" replacement="filename" default="ClassName" />
+</template>
+```
+
+If you build the above template with the filename "FalconDestroyer", then the resulting file will be "MegaFalconDestroyer.cs".
 
 ### Comments
 The `<comment>` and `<xml-comment>` tags can be used to create double `//` or triple `///` comment blocks.
