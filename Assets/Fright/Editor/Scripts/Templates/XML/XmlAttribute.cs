@@ -1,4 +1,3 @@
-﻿//
 // MIT License
 // 
 // Copyright (c) 2020 Brandon Dahn
@@ -27,33 +26,24 @@ using System.Collections.Generic;
 
 namespace Fright.Editor.Templates
 {
-	/// Describes a constructor that can be used in an XML Template
-	public class XmlConstructor : XmlFunction
+	public class XmlAttribute : XmlBase
 	{
+		/// The XML tag that this object comes from
 		public override string xmlType
 		{
-			get { return "constructor"; }
+			get { return "attribute"; }
 		}
 
+		/// Constructs the object from an Xml node and document
 		public override void ConstructFromXml(XmlNode node, XmlDocument document)
 		{
-			base.ConstructFromXml(node, document);
-			returnType = null;
-			GetNameFromParentType(node.ParentNode);
+
 		}
 
-		private void GetNameFromParentType(XmlNode parentNode)
+		/// Converts the XML object into C# and adds it to the string builder
+		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings templateSettings)
 		{
-			while(parentNode != null && string.IsNullOrEmpty(id))
-			{
-				if (parentNode.Name.Equals("class", System.StringComparison.InvariantCultureIgnoreCase) ||
-					parentNode.Name.Equals("struct", System.StringComparison.InvariantCultureIgnoreCase))
-				{
-					id = parentNode.GetAttribute<string>("id");
-				}
 
-				parentNode = parentNode.ParentNode;
-			}
 		}
 	}
 }
