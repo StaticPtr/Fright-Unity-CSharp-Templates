@@ -121,7 +121,8 @@ Properties are similar to members, except they have additional attributes such a
 |---|---|---|---|
 |id|false|-|The name of the member|
 |type|false|-|The type of the member|
-|default|true|-|An optional default value for the member|
+|default|true|-|An optional default value for the Property. Cannot be combined with `lambda`, getters, or setters|
+|lambda|true|-|An optional lambda value for the property. Cannot be combined with `default`, getters, or setters|
 |access|true|private|The accessibility of the type. Such as "public", "private", or "protected"|
 |static|true|false|Is the member static|
 |virtuality|true|none|Options: none, virtual, abstract, override|
@@ -146,6 +147,8 @@ first = value;
 second = value * 2;
       </setter>
     </property>
+    <property id="forth" type="int" default="4" />
+    <property id="fifth" type="int" lambda="5" />
   </class>
 </template>
 ```
@@ -167,6 +170,8 @@ private class MyClass
       second = value * 2;
     }
   }
+  public int forth = 4;
+  public int fifth => 5;
 }
 ```
 
