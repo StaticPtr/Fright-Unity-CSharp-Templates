@@ -81,10 +81,14 @@ namespace Fright.Editor.Templates
 			}
 			TemplateBuilder.EndColorBlock(stringBuilder, settings, TemplateSettings.SYSTEM_KEYWORD_COLOR);
 
-			TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.TYPE_COLOR);
-			stringBuilder.Append(returnType ?? "void");
-			TemplateBuilder.EndColorBlock(stringBuilder, settings, TemplateSettings.TYPE_COLOR);
-			stringBuilder.AppendSpace();	
+			if (!string.IsNullOrEmpty(returnType))
+			{
+				TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.TYPE_COLOR);
+				stringBuilder.Append(returnType ?? "void");
+				TemplateBuilder.EndColorBlock(stringBuilder, settings, TemplateSettings.TYPE_COLOR);
+				stringBuilder.AppendSpace();
+			}
+			
 			stringBuilder.Append(id);
 
 			//Arguments
