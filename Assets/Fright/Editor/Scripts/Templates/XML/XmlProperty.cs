@@ -31,6 +31,7 @@ namespace Fright.Editor.Templates
 	{
 		public string type;
 		public string defaultValue;
+		public string lambdaValue;
 		public bool isStatic;
 		public Virtuality virtuality;
 
@@ -44,6 +45,7 @@ namespace Fright.Editor.Templates
 			type = node.GetAttribute("type");
 			isStatic = node.GetAttribute<bool>("static");
 			defaultValue = node.GetAttribute("default");
+			lambdaValue = node.GetAttribute("lambda");
 			virtuality = node.GetEnumAttribute<Virtuality>("virtuality");
 		}
 
@@ -100,6 +102,22 @@ namespace Fright.Editor.Templates
 					else
 					{
 						stringBuilder.Append(defaultValue);
+					}
+				}
+				//Lambda
+				else if (!string.IsNullOrEmpty(lambdaValue))
+				{
+					stringBuilder.Append(" => ");
+
+					if (type.Equals("string", System.StringComparison.InvariantCultureIgnoreCase))
+					{
+						stringBuilder.Append("\"");
+						stringBuilder.Append(lambdaValue);	
+						stringBuilder.Append("\"");
+					}
+					else
+					{
+						stringBuilder.Append(lambdaValue);
 					}
 				}
 
