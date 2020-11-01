@@ -208,6 +208,14 @@ private class MyClass
   }
 }
 ```
+#### Constructor
+Constructors are functions that use the `<constructor>` tag. Conceptually a `constructor` is the same as a `function`, except it lacks support for `returnType`, `static`, and `sealed`.
+
+|Property|Is Optional|Default|Description|
+|---|---|---|---|
+|id|true|-|The name of the function. If null, the constructor will get its name from the type it is a part of|
+|access|true|private|The accessibility of the type. Such as "public", "private", or "protected"|
+|virtuality|true|none|Options: none, virtual, abstract, override|
 
 ## Namespaces
 ### Namespace Tag
