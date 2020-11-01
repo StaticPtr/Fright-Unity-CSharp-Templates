@@ -45,10 +45,12 @@ namespace Fright.Editor.Templates
 		private const string PERSISTENT_SETTING_LINE_ENDINGS = "lineendings";
 		private const string PERSISTENT_SETTING_TAB_MODE = "tabmode";
 		private const string PERSISTENT_SETTING_OVERLAPPING_USING_NAMESPACES = "overlappingUsingNamespace";
+		private const string PERSISTENT_SETTING_OPEN_FILE_ON_CREATE = "openFileOnCreate";
 
 		public TemplateBuilder.LineEndings lineEndings = TemplateBuilder.LineEndings.unix;
 		public TemplateBuilder.TabMode tabMode = TemplateBuilder.TabMode.tabs;
 		public bool includeOverlappingUsingNamespace = false;
+		public bool openFileOnCreate = true;
 
 		//Per-Template Settings
 		private const string PERSISTENT_SETTING_BUILD_OPTIONS = "buildoptions";
@@ -119,6 +121,7 @@ namespace Fright.Editor.Templates
 			EditorPrefs.SetInt(GetPersistentSettingKey(PERSISTENT_SETTING_LINE_ENDINGS), (int)lineEndings);
 			EditorPrefs.SetInt(GetPersistentSettingKey(PERSISTENT_SETTING_TAB_MODE), (int)tabMode);
 			EditorPrefs.SetInt(GetPersistentSettingKey(PERSISTENT_SETTING_OVERLAPPING_USING_NAMESPACES), includeOverlappingUsingNamespace ? 1 : 0);
+			EditorPrefs.SetInt(GetPersistentSettingKey(PERSISTENT_SETTING_OPEN_FILE_ON_CREATE), openFileOnCreate ? 1 : 0);
 
 			EditorPrefs.SetString(GetPersistentSettingKey(PERSISTENT_SETTING_BUILD_OPTIONS, template), buildOptions != null ? JsonUtility.ToJson(new BuildOptionCollection(buildOptions), false) : null);
 			EditorPrefs.SetString(GetPersistentSettingKey(PERSISTENT_SETTING_OPTIONAL_USINGS, template), optionalUsings != null ? JsonUtility.ToJson(new OptionalUsingCollection(optionalUsings), false) : null);
@@ -130,6 +133,7 @@ namespace Fright.Editor.Templates
 			lineEndings = (TemplateBuilder.LineEndings)EditorPrefs.GetInt(GetPersistentSettingKey(PERSISTENT_SETTING_LINE_ENDINGS), (int)TemplateBuilder.LineEndings.unix);
 			tabMode = (TemplateBuilder.TabMode)EditorPrefs.GetInt(GetPersistentSettingKey(PERSISTENT_SETTING_TAB_MODE), (int)TemplateBuilder.TabMode.tabs);
 			includeOverlappingUsingNamespace = EditorPrefs.GetInt(GetPersistentSettingKey(PERSISTENT_SETTING_OVERLAPPING_USING_NAMESPACES)) != 0x0;
+			openFileOnCreate = EditorPrefs.GetInt(GetPersistentSettingKey(PERSISTENT_SETTING_OPEN_FILE_ON_CREATE)) != 0x0;
 		}
 
 		/// Recovers any persistent settings from the provided template

@@ -233,7 +233,11 @@ namespace Fright.Editor.Templates
 			AssetDatabase.Refresh();
 			Object createdFile = AssetDatabase.LoadAssetAtPath<Object>(filePath);
 			Selection.activeObject = createdFile;
-			AssetDatabase.OpenAsset(createdFile);
+
+			if (templateSettings.openFileOnCreate)
+			{
+				AssetDatabase.OpenAsset(createdFile);
+			}
 
 			//Close this window
 			Close();
@@ -373,6 +377,7 @@ namespace Fright.Editor.Templates
 					templateSettings.lineEndings = (TemplateBuilder.LineEndings)EditorGUILayout.EnumPopup("Line Endings", templateSettings.lineEndings);
 					templateSettings.tabMode = (TemplateBuilder.TabMode)EditorGUILayout.EnumPopup("Tabs", templateSettings.tabMode);
 					templateSettings.includeOverlappingUsingNamespace = EditorGUILayout.Toggle(overlapUsingNamespaceContent, templateSettings.includeOverlappingUsingNamespace);
+					templateSettings.openFileOnCreate = EditorGUILayout.Toggle("Open On Create", templateSettings.openFileOnCreate);
 					EditorGUILayout.Space();
 				}
 				EditorGUILayout.EndVertical();
