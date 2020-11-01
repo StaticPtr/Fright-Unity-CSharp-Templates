@@ -28,6 +28,8 @@ namespace Fright.Editor.Templates
 {
 	public class XmlAttribute : XmlBase
 	{
+		public string innerText;
+
 		/// The XML tag that this object comes from
 		public override string xmlType
 		{
@@ -37,13 +39,28 @@ namespace Fright.Editor.Templates
 		/// Constructs the object from an Xml node and document
 		public override void ConstructFromXml(XmlNode node, XmlDocument document)
 		{
-
+			base.ConstructFromXml(node, document);
+			innerText = node.InnerText.Trim();
 		}
 
 		/// Converts the XML object into C# and adds it to the string builder
 		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings templateSettings)
 		{
+			stringBuilder.AppendIndentations(indentationLevel);
+			stringBuilder.Append("[");
 
+			//Type
+			TemplateBuilder.BeginColorBlock(stringBuilder, templateSettings, TemplateSettings.TYPE_COLOR);
+			stringBuilder.Append(id);
+			TemplateBuilder.EndColorBlock(stringBuilder, templateSettings, TemplateSettings.TYPE_COLOR);
+
+			//Arguments
+			if (!string.IsNullOrEmpty(innerText))
+			{
+				stringBuilder.Append($"({innerText})");
+			}
+
+			stringBuilder.Append("]");
 		}
 	}
 }
