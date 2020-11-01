@@ -55,7 +55,7 @@ namespace Fright.Editor.Tests
 
 		private string GetExpectedResult(string id)
 		{
-			return System.IO.File.ReadAllText("Assets/Fright/Editor/Tests/Test Expectations/Class_" + id);
+			return System.IO.File.ReadAllText("Assets/Fright/Editor/Tests/Test Expectations/Class_" + id).Replace("\r\n", "\n");
 		}
 
 		private string GetXml(string id)
