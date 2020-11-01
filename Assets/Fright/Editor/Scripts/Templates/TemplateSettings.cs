@@ -133,7 +133,7 @@ namespace Fright.Editor.Templates
 			lineEndings = (TemplateBuilder.LineEndings)EditorPrefs.GetInt(GetPersistentSettingKey(PERSISTENT_SETTING_LINE_ENDINGS), (int)TemplateBuilder.LineEndings.unix);
 			tabMode = (TemplateBuilder.TabMode)EditorPrefs.GetInt(GetPersistentSettingKey(PERSISTENT_SETTING_TAB_MODE), (int)TemplateBuilder.TabMode.tabs);
 			includeOverlappingUsingNamespace = EditorPrefs.GetInt(GetPersistentSettingKey(PERSISTENT_SETTING_OVERLAPPING_USING_NAMESPACES)) != 0x0;
-			openFileOnCreate = EditorPrefs.GetInt(GetPersistentSettingKey(PERSISTENT_SETTING_OPEN_FILE_ON_CREATE)) != 0x0;
+			openFileOnCreate = EditorPrefs.GetInt(GetPersistentSettingKey(PERSISTENT_SETTING_OPEN_FILE_ON_CREATE), 1) != 0x0;
 		}
 
 		/// Recovers any persistent settings from the provided template
