@@ -61,10 +61,8 @@ namespace Fright.Editor.Templates
 			}
 		}
 
-		/// Converts the XML object into C# and adds it to the string builder
-		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings settings)
+		protected virtual void WriteSignature(StringBuilder stringBuilder, ref int indentationLevel, TemplateSettings settings)
 		{
-			//Signature
 			stringBuilder.AppendIndentations(indentationLevel);
 			TemplateBuilder.BeginColorBlock(stringBuilder, settings, TemplateSettings.ACCESSIBILITY_KEYWORD_COLOR);
 			stringBuilder.Append(accessibility);
@@ -90,8 +88,10 @@ namespace Fright.Editor.Templates
 			}
 			
 			stringBuilder.Append(id);
+		}
 
-			//Arguments
+		protected virtual void WriteArguments(StringBuilder stringBuilder, ref int indentationLevel, TemplateSettings settings)
+		{
 			stringBuilder.Append("(");
 
 			for(int i = 0; i < arguments.Count; ++i)
@@ -111,9 +111,10 @@ namespace Fright.Editor.Templates
 			}
 
 			stringBuilder.Append(")");
+		}
 
-
-			//Body
+		protected virtual void WriteBody(StringBuilder stringBuilder, ref int indentationLevel, TemplateSettings settings)
+		{
 			if (virtuality == Virtuality.@abstract)
 			{
 				stringBuilder.Append(";\n");
@@ -130,6 +131,14 @@ namespace Fright.Editor.Templates
 				stringBuilder.AppendIndentations(indentationLevel);
 				stringBuilder.Append("}");
 			}
+		}
+
+		/// Converts the XML object into C# and adds it to the string builder
+		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings settings)
+		{
+			WriteSignature(stringBuilder, ref indentationLevel, settings);
+			WriteArguments(stringBuilder, ref indentationLevel, settings);
+			WriteBody(stringBuilder, ref indentationLevel, settings);
 		}
 	}
 }
