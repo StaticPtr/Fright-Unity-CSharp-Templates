@@ -5,3 +5,4 @@ Library
 /*.sln
 /obj
 /.vscode
+Logs/Packages-Update.log
