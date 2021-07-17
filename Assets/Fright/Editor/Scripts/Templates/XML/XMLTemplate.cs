@@ -187,7 +187,7 @@ namespace Fright.Editor.Templates
 			{
 				if (!@using.isOptional || settings == null || settings.IsOptionalUsingEnabled(@using.id))
 				{
-					if (settings.includeOverlappingUsingNamespace || !IsNamespaceUsed(@using.id, settings))
+					if (settings == null || settings.includeOverlappingUsingNamespace || !IsNamespaceUsed(@using.id, settings))
 					{
 						yield return @using;
 					}
