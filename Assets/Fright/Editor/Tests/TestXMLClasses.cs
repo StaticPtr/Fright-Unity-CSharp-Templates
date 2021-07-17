@@ -15,6 +15,7 @@ namespace Fright.Editor.Tests
 		[TestCase("OnlyInterfaces")]
 		[TestCase("BaseAndInterfaces")]
 		[TestCase("Complex")]
+		[TestCase("ComplexThis")]
 		[TestCase("ComplexWithMembers")]
 		public void RunXmlToCodeTestForClass(string id)
 		{

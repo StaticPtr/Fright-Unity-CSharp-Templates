@@ -1,0 +1,28 @@
+<class id="Test" base="Object" access="public">
+	<interface-contract id="Interface1" />
+	<interface-contract id="Interface2" />
+	<interface-contract id="Interface3" />
+	
+	<constructor this="4" />
+	<br />
+
+	<constructor base="x">
+		<argument id="x" type="int" />
+	</constructor>
+	<br />
+
+	<!-- Add(float, float) : float -->
+	<function id="Add" access="public" returnType="float">
+		<argument id="lhs" type="float" />
+		<argument id="rhs" type="float" />
+int result = lhs + rhs;
+Debug.Log(result);
+return result;
+	</function>
+
+	<!-- DoSomething() : void -->
+	<br />
+	<function id="DoSomething" access="public" static="true" returnType="string">
+return "Test";
+	</function>
+</class>

@@ -30,6 +30,9 @@ namespace Fright.Editor.Templates
 	/// Describes a constructor that can be used in an XML Template
 	public class XmlConstructor : XmlFunction
 	{
+		public string otherConstructArguments = null;
+		public string otherConstructType = null;
+
 		public override string xmlType
 		{
 			get { return "constructor"; }
@@ -40,6 +43,17 @@ namespace Fright.Editor.Templates
 			base.ConstructFromXml(node, document);
 			returnType = null;
 			GetNameFromParentType(node.ParentNode);
+
+			if (node.GetAttribute("this") is string thisArguments)
+			{
+				otherConstructArguments = thisArguments;
+				otherConstructType = "this";
+			}
+			else if (node.GetAttribute("base") is string baseArguments)
+			{
+				otherConstructArguments = baseArguments;
+				otherConstructType = "base";
+			}
 		}
 
 		private void GetNameFromParentType(XmlNode parentNode)
@@ -54,6 +68,22 @@ namespace Fright.Editor.Templates
 
 				parentNode = parentNode.ParentNode;
 			}
+		}
+
+		/// Converts the XML object into C# and adds it to the string builder
+		public override void ToCSharp(StringBuilder stringBuilder, int indentationLevel, TemplateSettings settings)
+		{
+			WriteSignature(stringBuilder, ref indentationLevel, settings);
+			WriteArguments(stringBuilder, ref indentationLevel, settings);
+
+			if (!string.IsNullOrEmpty(otherConstructType) && !string.IsNullOrEmpty(otherConstructArguments))
+			{
+				stringBuilder.AppendLine();
+				stringBuilder.AppendIndentations(indentationLevel + 1);
+				stringBuilder.AppendFormat(": {0}({1})", otherConstructType, otherConstructArguments);
+			}
+
+			WriteBody(stringBuilder, ref indentationLevel, settings);
 		}
 	}
 }
