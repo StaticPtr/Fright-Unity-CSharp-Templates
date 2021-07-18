@@ -44,6 +44,7 @@ namespace Fright.Editor.Templates
 		[SerializeField] private Rect sharedWindowPosition = new Rect(Vector2.zero, new Vector2(700.0f, 400.0f));
 		[SerializeField] private Vector2 templatePreviewScrollPos = Vector2.zero;
 		[SerializeField] private Vector2 templateSettingsScrollPos = Vector2.zero;
+		[SerializeField] private List<string> filenames = new List<string>() { "" };
 		
 		private TemplateSettings templateSettings = new TemplateSettings();
 		private List<XmlTemplate> templates = null;
@@ -51,6 +52,7 @@ namespace Fright.Editor.Templates
 		private string codePreview = null;
 
 		private GUIStyle codePreviewStyle;
+		private GUIStyle errorLabelStyle;
 		private GUIContent overlapUsingNamespaceContent = new GUIContent("Overlap Usings", "When false, if a template includes a using statement that matches a namespace block, that using statement will be removed");
 
 		/// The path to the currently selected folder in the project view
@@ -80,32 +82,12 @@ namespace Fright.Editor.Templates
 			}
 		}
 
-		public string templateCreateFilePath
-		{
-			get
-			{
-				string result = null;
-
-				if (lastKnownCreationPath != null)
-				{
-					result = lastKnownCreationPath + "/";
-					result += template.GetMetaData(METADATA_FILENAME_PREFIX, string.Empty);
-					result += (templateSettings.GetBuildOptionValue("filename") ?? template.id);
-					result += template.GetMetaData(METADATA_FILENAME_SUFFIX, string.Empty);
-					result += ".cs";
-				}
-
-				return result;
-			}
-		}
-
 		public bool canCreateTemplate
 		{
 			get
 			{
 				bool result = true;
 				
-				result &= !string.IsNullOrEmpty(templateCreateFilePath) && !File.Exists(templateCreateFilePath);
 				result &= template != null;
 				result &= templateSettings != null;
 
@@ -220,27 +202,49 @@ namespace Fright.Editor.Templates
 			}
 		}
 
-		private void CreateFileFromTemplate()
+		private string GetFilePathForFilename(string filename)
+		{
+			string result = null;
+
+			if (lastKnownCreationPath != null)
+			{
+				result = lastKnownCreationPath + "/";
+				result += template.GetMetaData(METADATA_FILENAME_PREFIX, string.Empty);
+				result += (filename ?? template.id);
+				result += template.GetMetaData(METADATA_FILENAME_SUFFIX, string.Empty);
+				result += ".cs";
+			}
+
+			return result;
+		}
+
+		private void CreateFileFromTemplate(string filename)
 		{
 			templateSettings.enableSyntaxHighlighting = false;
+			templateSettings.SetBuildOptionValue("filename", filename);
 
 			//Create the file
 			string sourceCode = TemplateBuilder.BuildCodeFromTemplate(template, templateSettings);
-			string filePath = templateCreateFilePath;
-			File.WriteAllText(filePath, sourceCode);
+			string filePath = GetFilePathForFilename(filename);
 
-			//Open the file
-			AssetDatabase.Refresh();
-			Object createdFile = AssetDatabase.LoadAssetAtPath<Object>(filePath);
-			Selection.activeObject = createdFile;
-
-			if (templateSettings.openFileOnCreate)
+			if (!File.Exists(filePath))
 			{
-				AssetDatabase.OpenAsset(createdFile);
-			}
+				File.WriteAllText(filePath, sourceCode);
 
-			//Close this window
-			Close();
+				//Open the file
+				AssetDatabase.Refresh();
+				Object createdFile = AssetDatabase.LoadAssetAtPath<Object>(filePath);
+				Selection.activeObject = createdFile;
+
+				if (templateSettings.openFileOnCreate)
+				{
+					AssetDatabase.OpenAsset(createdFile);
+				}
+			}
+			else
+			{
+				Debug.LogError($"File \"{filePath}\" already exists");
+			}
 		}
 
 		#region Drawing
@@ -291,6 +295,12 @@ namespace Fright.Editor.Templates
 					codePreviewStyle.font = firaFont;
 					codePreviewStyle.fontSize = 12;
 				}
+			}
+
+			if (errorLabelStyle == null)
+			{
+				errorLabelStyle = new GUIStyle("label");
+				errorLabelStyle.normal.textColor = Color.red;
 			}
 
 			//Drawing
@@ -395,7 +405,15 @@ namespace Fright.Editor.Templates
 				{
 					if (GUILayout.Button("Create"))
 					{
-						CreateFileFromTemplate();
+						foreach(var filename in filenames)
+						{
+							if (!string.IsNullOrEmpty(filename))
+							{
+								CreateFileFromTemplate(filename);
+							}
+						}
+
+						Close();
 					}
 				}
 				GUI.enabled = wasGUIEnabled;
@@ -459,7 +477,8 @@ namespace Fright.Editor.Templates
 		{
 			EditorGUILayout.BeginHorizontal(EditorStyles.toolbar, GUILayout.ExpandHeight(true));
 			{
-				EditorGUILayout.LabelField(templateCreateFilePath ?? "select a folder in the project view", EditorStyles.boldLabel);
+				string firstFile = filenames.Count > 0 ? GetFilePathForFilename(filenames[0]) : null;
+				EditorGUILayout.LabelField(firstFile ?? "select a folder in the project view", EditorStyles.boldLabel);
 
 				if (GUILayout.Button("Reset Template Settings", EditorStyles.toolbarButton, GUILayout.Width(140.0f)))
 				{
@@ -474,11 +493,57 @@ namespace Fright.Editor.Templates
 			EditorGUILayout.EndHorizontal();
 		}
 
+		private void DrawFilenames(BuildOption buildOption)
+		{
+			for(int i = 0; i < filenames.Count; ++i)
+			{
+				GUILayout.BeginHorizontal();
+				{
+					if (i == 0)
+					{
+						filenames[i] = EditorGUILayout.TextField("Filename", filenames[i]);
+						buildOption.SetTextValue(filenames[i]);
+
+						if (GUILayout.Button("+", EditorStyles.miniButtonRight, GUILayout.Width(20.0f)))
+						{
+							filenames.Add("");
+						}
+					}
+					else
+					{
+						filenames[i] = EditorGUILayout.TextField(" ", filenames[i]);
+
+						if (GUILayout.Button("-", EditorStyles.miniButtonRight, GUILayout.Width(20.0f)))
+						{
+							filenames.RemoveAt(i);
+							GUIUtility.ExitGUI();
+						}
+					}
+				}
+				GUILayout.EndHorizontal();
+				
+				//File path validation
+				string filePath = GetFilePathForFilename(filenames[i]);
+
+				if (File.Exists(filePath))
+				{
+					EditorGUILayout.LabelField(" ", "File Exists, Wont Be Created", errorLabelStyle);
+				}
+			}
+		}
+
 		private void DrawBuildOptions()
 		{
 			foreach(var buildOption in templateSettings.buildOptions)
 			{
-				buildOption.DoLayout();
+				if (buildOption.id != "filename")
+				{
+					buildOption.DoLayout();
+				}
+				else
+				{
+					DrawFilenames(buildOption);
+				}
 			}
 		}
 

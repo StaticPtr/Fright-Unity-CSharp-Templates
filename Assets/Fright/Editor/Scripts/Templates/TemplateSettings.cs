@@ -115,6 +115,21 @@ namespace Fright.Editor.Templates
 			return result;
 		}
 
+		public void SetBuildOptionValue(string buildOptionID, string value)
+		{
+			//Find the first build option with the provided ID
+			for(int i = 0; i < buildOptions.Count; ++i)
+			{
+				BuildOption buildOption = buildOptions[i];
+
+				if (buildOption.id == buildOptionID)
+				{
+					buildOption.SetTextValue(value);
+					break;
+				}
+			}
+		}
+
 		/// Saves any persistent settings for the provided template
 		public void SavePersistentSettings(XmlTemplate template)
 		{
