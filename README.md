@@ -221,6 +221,39 @@ Constructors are functions that use the `<constructor>` tag. Conceptually a `con
 |id|true|-|The name of the function. If null, the constructor will get its name from the type it is a part of|
 |access|true|private|The accessibility of the type. Such as "public", "private", or "protected"|
 |virtuality|true|none|Options: none, virtual, abstract, override|
+|base|true|none|Use to define a reference to base constructor|
+|this|true|none|Use to define a reference to a convenience constructor|
+
+```XML
+<template id="Constructors" format="1.0.0.0">
+  <class id="SubClass" base="ParentClass">
+    <constructor this="5">
+    </constructor>
+    <br />
+    
+    <constructor base="x">
+      <argument id="x" type="int" />
+    </constructor>
+  </class>
+</template>
+```
+
+```C#
+private class SubClass : ParentClass
+{
+  private SubClass()
+    : this(5)
+  {
+  
+  }
+  
+  private SubClass(int x)
+    : base(x)
+  {
+
+  }
+}
+```
 
 #### Attributes
 Add attributes to your types, fields, or functions to extend their functionality using the `<attribute>` tag.
